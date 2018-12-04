@@ -1,2 +1,2 @@
 # Smart-Lot
-Sensor network and accompanying application that tracks and presents unoccupied parking spaces in real time. 
+Application to track and present parking lot availability in real time using camera sensors and object detection. 
