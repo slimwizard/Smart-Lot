@@ -8,7 +8,7 @@ import cv2
  
 #run using 'python detection.py --image ./images/Nethken_lot.png'
 
-# construct the argument parse and parse the arguments
+#construct the argument parse and parse the arguments
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required=True,
 # 	help="path to input image")
@@ -36,15 +36,18 @@ import cv2
 # print("[INFO] loading model...")
 # net = cv2.dnn.readNetFromCaffe("./detection-models/MobileNetSSD_deploy.prototxt.txt", "./detection-models/MobileNetSSD_deploy.caffemodel")
 
-# net2 = cv2.dnn.
+
 
 # # load the input image and construct an input blob for the image
 # # by resizing to a fixed 300x300 pixels and then normalizing it
 # # (note: normalization is done via the authors of the MobileNet SSD
 # # implementation)
 # image = cv2.imread(args["image"])
+
+# image = cv2.resize(image, (1200, 800))
+
 # (h, w) = image.shape[:2]
-# blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.007843,
+# blob = cv2.dnn.blobFromImage(image, 0.007843,
 # 	(300, 300), 127.5)
 
 # # pass the blob through the network and obtain the detections and
@@ -61,7 +64,7 @@ import cv2
  
 # 	# filter out weak detections by ensuring the `confidence` is
 # 	# greater than the minimum confidence
-# 	if confidence > .01:
+# 	if confidence > .2:
 # 		# extract the index of the class label from the `detections`,
 # 		# then compute the (x, y)-coordinates of the bounding box for
 # 		# the object
@@ -87,9 +90,8 @@ import cv2
 #run using 'python detection.py'
 
 cascade_src = './detection-models/cars.xml'
-img = cv2.imread('./images/Nethken_lot.png')
-img = cv2.resize(img, (1000, 800))
-
+img = cv2.imread('./images/back_of_car.png')
+img = cv2.resize(img, (800, 800))
 car_cascade = cv2.CascadeClassifier(cascade_src)
 
 
@@ -98,7 +100,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 cars = car_cascade.detectMultiScale(img, 1.1, 1)
 
 for (x,y,w,h) in cars:
-	cv2.rectangle(img,(x,y),(x+(w-w/3),y+(h-h/3)),(0,0,255),2)      
+	cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)      
 
 cv2.imshow('image', img)
 cv2.waitKey(0)
