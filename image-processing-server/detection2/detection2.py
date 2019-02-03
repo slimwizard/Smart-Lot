@@ -6,6 +6,7 @@ import random as rnd
 import cv2
 from utils import *
 from make_model import *
+import time
 
 seed = 11
 rnd.seed(seed)
@@ -15,8 +16,9 @@ np.random.seed(seed)
 #### EDIT ONLY THIS BLOCK
 
 #videofile = './test_video.mp4'
-imagefile = './../images/Nethken_lot.png'
+imagefile = './../../images/Nethken_lot.png'
 frame = cv2.imread(imagefile)
+#cv2.imshow("im", frame)
 
 model = make_model()
 model.load_weights('weights_best_detection2.h5')
@@ -64,13 +66,11 @@ bbox_list, totalWindows, correct, score = detectionProcess(cv2.cvtColor(frame,cv
 drawBoxes(frame, bbox_list)
 
 # Draw detections and road masks
-cv2.imshow('image',sidebyside(frame,image_masked))
-k = cv2.waitKey(3)
+cv2.imshow('image', frame)
+cv2.waitKey(0)
+# time.sleep(50)
+# #QUIT
+# if(k & 0xFF == ord('q')):
+#     cv2.destroyWindow("image")
 
-#QUIT
-if(k & 0xFF == ord('q')):
-    cv2.destroyWindow("image")
-
-
-cap.release()
-cv2.destroyAllWindows()
+#cv2.destroyAllWindows()
