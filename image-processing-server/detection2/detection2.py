@@ -16,7 +16,7 @@ np.random.seed(seed)
 #### EDIT ONLY THIS BLOCK
 
 #videofile = './test_video.mp4'
-imagefile = './../../images/Nethken_lot.png'
+imagefile = './../../images/NethkenA-cropped-row3.png'
 frame = cv2.imread(imagefile)
 #cv2.imshow("im", frame)
 
