@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {MatExpansionModule, matExpansionAnimations} from '@angular/material';
 
 @Component({
   selector: 'app-root',
