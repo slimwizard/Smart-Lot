@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MatExpansionModule, MatCardModule, MatButtonModule } from '@angular/material';
+import { MatExpansionModule, MatCardModule, MatButtonModule, MatListModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { NethkenAComponent } from './nethken-a/nethken-a.component'
@@ -20,7 +20,8 @@ import { NethkenAComponent } from './nethken-a/nethken-a.component'
     BrowserAnimationsModule,
     MatExpansionModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {MatExpansionModule, matExpansionAnimations, MatButtonModule} from '@angular/material';
+import {MatExpansionModule, matExpansionAnimations, MatButtonModule, MatNavList} from '@angular/material';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +7,8 @@ import {MatExpansionModule, matExpansionAnimations, MatButtonModule} from '@angu
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  links = ["Nethken A"]
 
   constructor() { }
 
