@@ -1,13 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
-/* body {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
-   }
-   
-   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Archivo', sans-serif;
-    font-weight: 500;
-   }*/
+
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 html, body { height: 100%; } 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.main-content {margin: 3%; text-align: center; align-content: center;}
+
+
+.openSpot {
+    fill: rgb(128, 231, 128);
+    color: rgb(128, 231, 128);
+    fill-opacity:1;stroke:rgb(128, 231, 128);stroke-width:0.26458332;stroke-opacity:1
+}
+
+.takenSpot {
+    fill: rgb(255, 112, 112);
+    color: rgb(255, 112, 112);
+    fill-opacity:1;stroke:rgb(255, 112, 112);stroke-width:0.26458332;stroke-opacity:1
+}
+
+div {text-align: center; align-content: center;}
+
+.grid-container {
+display: grid;
+grid-template-columns: 1fr 2fr;
+}
+
+
+
+
+mat-card{
+    width: 350px;
+    height: auto;
+    display: block;
+    margin-left:auto;
+    margin-right:auto;  
+    vertical-align:middle;
+}
