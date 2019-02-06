@@ -1,0 +1,23 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+
+DROP DATABASE IF EXISTS smartlot;
+CREATE DATABASE smartlot;
+
+DROP IF EXISTS lot;
+DROP IF EXISTS parking;
+
+CREATE TABLE parking (
+    parking_type int SERIAL,
+    type_label text
+);
+
+CREATE TABLE lot (
+    spot_id uuid DEFAULT uuid_generate_v4 ()
+    spot_number int NOT NULL,
+    latitude decimal,
+    longitude decimal,
+    parking_type int,
+    occupied boolean
+);
