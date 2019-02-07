@@ -14,6 +14,8 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
+db = SQLAlchemy(app)
+
 lots = [
     {
         'id': 1,
@@ -26,6 +28,10 @@ lots = [
         'description': u'asdf'
     }
 ]
+
+@app.route('/')
+def index():
+    return "Hello, World!"
 
 @app.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
