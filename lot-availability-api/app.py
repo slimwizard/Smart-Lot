@@ -35,7 +35,6 @@ lots = [
 def index():
     return "Hewwo wowwd"
 
-
 @app.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -44,11 +43,9 @@ def upload_file():
     file.save("static/test.jpg")
     return "Saved successfully"
 
-
 @app.route('/smart-lot/lots', methods=['GET'])
 def get_tasks():
     return jsonify({'lots': lots})
-
 
 @app.route('/smart-lot/lots/<int:lot_id>', methods=['GET'])
 def get_lot(lot_id):
@@ -59,8 +56,6 @@ def get_lot(lot_id):
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
-
-
 @app.route('/smart-lot/test/<int:flag>', methods=['GET'])
 def simulate_activity(flag):
     spots = db.session.query(NethkenA).all()
@@ -68,11 +63,9 @@ def simulate_activity(flag):
         i.spot_number, i.occupied) for i in spots]))
     return 'testy'
 
-
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
 
 ### POST for JSON data if we need it down the road ###
 # @app.route('/smatr-lot/lots', methods=['POST'])
