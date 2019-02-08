@@ -1,6 +1,7 @@
 #!python
 from flask import Flask, jsonify, make_response, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from models import NethkenA
 
 POSTGRES = {
     'user': 'smartlot_db_admin',
@@ -14,7 +15,7 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app)  
 
 lots = [
     {
@@ -31,7 +32,8 @@ lots = [
 
 @app.route('/')
 def index():
-    return "Hello, World!"
+    myusers = db.session.query(NethkenA).all()
+    return render_template('base.html', myusers=myusers)
 
 @app.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
