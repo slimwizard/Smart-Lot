@@ -64,9 +64,9 @@ def get_lot(lot_id):
 @app.route('/smart-lot/test/<int:flag>', methods=['GET'])
 def simulate_activity(flag):
     spots = db.session.query(NethkenA).all()
-    while flag:
-        for i in spots:
-            print(i)
+    print(''.join(['spot: {}\noccupied:{}\n'.format(
+        i.spot_number, i.occupied) for i in spots]))
+    return 'testy'
 
 
 @app.errorhandler(404)
