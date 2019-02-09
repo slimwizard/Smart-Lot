@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, make_response, request, send_from_directory, render_template
 from flask_sqlalchemy import SQLAlchemy
 from models import NethkenA
+from time import sleep
 
 POSTGRES = {
     'user': 'smartlot_db_admin',
@@ -77,6 +78,7 @@ def simulate_activity():
     while FLAG:
         print(''.join(['spot: {}\noccupied:{}\n'.format(
             i.spot_number, i.occupied) for i in spots]))
+        sleep(15)
 
 
 @app.errorhandler(404)
