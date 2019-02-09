@@ -1,0 +1,9 @@
+.about {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+.mat-accent {
+    background-color: lightcoral;
+}

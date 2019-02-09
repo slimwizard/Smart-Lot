@@ -8,7 +8,7 @@ import {MatExpansionModule, matExpansionAnimations, MatButtonModule, MatNavList}
 })
 export class HomeComponent implements OnInit {
 
-  links = ["Nethken A"]
+  links = ["Nethken A","About"]
 
   constructor() { }
 
