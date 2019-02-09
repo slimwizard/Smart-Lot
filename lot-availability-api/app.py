@@ -81,10 +81,12 @@ def simulate_activity():
             temp_spot = db.session.query(
                 NethkenA).filter_by(spot_number=i).first()
             if temp_spot.spot_number == i and temp_spot.occupied == True:
-                temp_spot.occupied = False
+                row_changed = db.session.query(NethkenA).filter_by(
+                    spot_number=i).update(dict(occupied=True))
                 db.session.commit()
             elif temp_spot.spot_number == i and temp_spot.occupied == False:
-                temp_spot.occupied = True
+                row_changed = db.session.query(NethkenA).filter_by(
+                    spot_number=i).update(dict(occupied=False))
                 db.session.commit()
         print(''.join(['spot: {}\noccupied:{}\n'.format(
             i.spot_number, i.occupied) for i in spots]))
