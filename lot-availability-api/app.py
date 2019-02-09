@@ -17,6 +17,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%
 
 db = SQLAlchemy(app)
 
+FLAG = 0
+
 lots = [
     {
         'id': 1,
@@ -35,6 +37,7 @@ lots = [
 def index():
     return "Hewwo wowwd"
 
+
 @app.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -43,9 +46,11 @@ def upload_file():
     file.save("static/test.jpg")
     return "Saved successfully"
 
+
 @app.route('/smart-lot/lots', methods=['GET'])
 def get_tasks():
     return jsonify({'lots': lots})
+
 
 @app.route('/smart-lot/lots/<int:lot_id>', methods=['GET'])
 def get_lot(lot_id):
@@ -56,12 +61,23 @@ def get_lot(lot_id):
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
-@app.route('/smart-lot/test/<int:flag>', methods=['GET'])
-def simulate_activity(flag):
-    spots = db.session.query(NethkenA).all()
-    print(''.join(['spot: {}\noccupied:{}\n'.format(
-        i.spot_number, i.occupied) for i in spots]))
+
+
+@app.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
+def flag_bit(api_flag):
+    global FLAG
+    FLAG = api_flag
+    simulate_activity()
     return 'testy'
+
+
+def simulate_activity():
+    global FLAG
+    spots = db.session.query(NethkenA).all()
+    while FLAG:
+        print(''.join(['spot: {}\noccupied:{}\n'.format(
+            i.spot_number, i.occupied) for i in spots]))
+
 
 @app.errorhandler(404)
 def not_found(error):
@@ -80,6 +96,7 @@ def not_found(error):
 #     }
 #     tasks.append(lot)
 #     return jsonify({'lot': lot}), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)
