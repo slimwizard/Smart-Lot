@@ -3,6 +3,7 @@ from flask import Flask, jsonify, make_response, request, send_from_directory, r
 from flask_sqlalchemy import SQLAlchemy
 from models import NethkenA
 from time import sleep
+from random import sample
 
 POSTGRES = {
     'user': 'smartlot_db_admin',
@@ -74,8 +75,17 @@ def flag_bit(api_flag):
 
 def simulate_activity():
     global FLAG
-    spots = db.session.query(NethkenA).all()
     while FLAG:
+        spots = db.session.query(NethkenA).all()
+        for i in sample(range(1, len(spots)), 3):
+            temp_spot = db.session.query(
+                NethkenA).filter_by(spot_number=i).first()
+            if temp_spot.spot_number == i and temp_spot.occupied == True:
+                temp_spot.occupied = False
+                db.session.commit()
+            elif temp_spot.spot_number == i and temp_spot.occupied == False:
+                temp_spot.occupied = True
+                db.session.commit()
         print(''.join(['spot: {}\noccupied:{}\n'.format(
             i.spot_number, i.occupied) for i in spots]))
         sleep(15)
