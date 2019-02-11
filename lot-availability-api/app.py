@@ -45,7 +45,9 @@ def get_lot(lot_name):
         rows.append(row.as_dict())
     if len(lot_info) == 0:
         abort(404)
-    return jsonify(rows)
+    response = jsonify(rows)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.errorhandler(404)
 def not_found(error):

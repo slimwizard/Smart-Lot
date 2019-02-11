@@ -11,8 +11,17 @@
           <a mat-button routerLink="/home">Back</a>
         </mat-card-content>  
     </mat-card>
-  </div>  
-  <div style=" height: 100px; padding-left: 15px;" >
+  </div> 
+  <div style="text-align: center; margin-top: 30px;">
+    <mat-progress-spinner style="margin:0 auto;" *ngIf="isLoading"
+    [mode]="mode"
+    [value]="value"
+    [diameter]=20
+></mat-progress-spinner>
+
+  </div>
+  
+  <div *ngIf="!isLoading" style=" height: 100px; padding-left: 15px;" >
     <svg
       xmlns:dc="http://purl.org/dc/elements/1.1/"
       xmlns:cc="http://creativecommons.org/ns#"
@@ -39,9 +48,9 @@
         height="49.136898"
         width="32.072338"
         id="spot1"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(1) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(2) ? 'takenSpot' : 'openSpot'"
         id="spot2"
         width="32.072338"
         height="49.136898"
@@ -53,16 +62,16 @@
         height="49.136898"
         width="32.072338"
         id="spot3"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(3) ? 'takenSpot' : 'openSpot'" />
     <rect
         y="106.43674"
         x="9.7055464"
         height="49.136898"
         width="32.072338"
         id="spot7"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(7) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(8)? 'takenSpot' : 'openSpot'"
         id="spot8"
         width="32.072338"
         height="49.136898"
@@ -74,9 +83,9 @@
         height="49.136898"
         width="32.072338"
         id="spot9"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(9) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(10) ? 'takenSpot' : 'openSpot'"
         id="spot10"
         width="32.072338"
         height="49.136898"
@@ -88,9 +97,9 @@
         height="49.136898"
         width="32.072338"
         id="spot11"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(11) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(12) ? 'takenSpot' : 'openSpot'"
         id="spot12"
         width="32.072338"
         height="49.136898"
@@ -102,9 +111,9 @@
         height="49.136898"
         width="32.072338"
         id="spot13"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(13) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(14) ? 'takenSpot' : 'openSpot'"
         id="spot14"
         width="32.072338"
         height="49.136898"
@@ -116,9 +125,9 @@
         height="49.136898"
         width="32.072338"
         id="spot15"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(15) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(16) ? 'takenSpot' : 'openSpot'"
         id="spot16"
         width="32.072338"
         height="49.136898"
@@ -130,9 +139,9 @@
         height="49.136898"
         width="32.072338"
         id="spot17"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(17) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(18) ? 'takenSpot' : 'openSpot'"
         id="spot18"
         width="32.072338"
         height="49.136898"
@@ -144,16 +153,16 @@
         height="49.136898"
         width="32.072338"
         id="spot19"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(19) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(20) ? 'takenSpot' : 'openSpot'"
         id="spot20"
         width="32.072338"
         height="49.136898"
         x="106.45712"
         y="244.61505" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(4) ? 'takenSpot' : 'openSpot'"
         id="spot4"
         width="32.072338"
         height="49.136898"
@@ -165,9 +174,9 @@
         height="49.136898"
         width="32.072338"
         id="spot5"
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'" />
+        [ngClass]="isOccupied(5) ? 'takenSpot' : 'openSpot'" />
     <rect
-        [ngClass]="selected==true ? 'takenSpot' : 'openSpot'"
+        [ngClass]="isOccupied(6) ? 'takenSpot' : 'openSpot'"
         id="spot6"
         width="32.072338"
         height="49.136898"
