@@ -1,9 +1,32 @@
+# coding: utf-8
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, Numeric, SmallInteger, Text, text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+metadata = Base.metadata
 
 
-class Lot(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+class Parking(Base):
+    __tablename__ = 'parking'
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+    type_id = Column(SmallInteger, primary_key=True, server_default=text("nextval('parking_type_id_seq'::regclass)"))
+    type_label = Column(Text, nullable=False)
+
+
+class NethkenA(Base):
+    __tablename__ = 'nethken_a'
+
+    spot_id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    spot_number = Column(Integer, nullable=False)
+    latitude = Column(Numeric(10, 6))
+    longitude = Column(Numeric(10, 6))
+    parking_type = Column(ForeignKey('parking.type_id'))
+    occupied = Column(Boolean)
+
+    parking = relationship('Parking')
+
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
