@@ -3,6 +3,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, Numeric, SmallInteg
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from decimal import Decimal
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -28,5 +29,11 @@ class NethkenA(Base):
     parking = relationship('Parking')
 
     def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        table_as_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        for c in table_as_dict:
+           if isinstance(table_as_dict[c], Decimal):
+               table_as_dict[c] = float(table_as_dict[c])
+        return table_as_dict
+
+
 
