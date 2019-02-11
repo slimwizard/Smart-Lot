@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule, MatButtonModule, MatProgressSpinner } from '@angular/material'
-import { LotAvailabilityService } from '../services/lot-availability.service';
+import { ParkingSpot, LotAvailabilityService } from '../services/lot-availability.service';
 
 @Component({
   selector: 'app-nethken-a',
@@ -10,8 +10,9 @@ import { LotAvailabilityService } from '../services/lot-availability.service';
 export class NethkenAComponent implements OnInit {
 
   constructor(private lotAvailibilityService: LotAvailabilityService) { }
-  selected: boolean = true;
+  parkingSpots: ParkingSpot[]
   occupiedSpots;
+
   isLoading: boolean = true; 
   color = 'primary';
   mode = 'indeterminate';
@@ -25,10 +26,9 @@ export class NethkenAComponent implements OnInit {
   ngOnInit() {
     this.lotAvailibilityService.getLotData("NethkenA").subscribe(data => {
       this.isLoading = true;
-      this.occupiedSpots = data
-      this.occupiedSpots = this.occupiedSpots.filter(item => item.occupied == true).map(item => item.spot_number)
+      this.parkingSpots = data
+      this.occupiedSpots = this.parkingSpots.filter(item => item.occupied == true).map(item => item.spot_number)
       this.isLoading = false;
-      console.log(this.occupiedSpots)
     })
     
   }
