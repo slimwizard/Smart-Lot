@@ -3,7 +3,7 @@
 html, body { height: 100%; } 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.main-content {margin: 3%; text-align: center; align-content: center;}
+.main-content {margin: 1%; text-align: center; align-content: center;}
 
 
 .openSpot {
@@ -26,6 +26,10 @@ grid-template-columns: 1fr 2fr;
 }
 
 
+.mat-card {
+    padding: 1px;
+    padding-top: 10px; 
+}
 
 
 mat-card{
@@ -33,7 +37,7 @@ mat-card{
     height: auto;
     display: block;
     margin-left:auto;
-    margin-right:auto;  
+    margin-right:auto; 
     vertical-align:middle;
 }
 
@@ -42,4 +46,5 @@ router-outlet ~ * {
     height: 100%;
     width: 100%;
   }
+  
   
