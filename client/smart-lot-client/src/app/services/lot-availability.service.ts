@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class LotAvailabilityService {
 
-  api_url: string = ''
+  api_url: string = 'http://3.81.138.55/smart-lot/lots/'
   api_url_dev: string = 'http://127.0.0.1:5000/smart-lot/lots/'
   
   constructor(private http: HttpClient) { }
