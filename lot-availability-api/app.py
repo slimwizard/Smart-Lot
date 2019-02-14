@@ -1,6 +1,8 @@
 #!python
+from sqlalchemy.dialects.postgresql import UUID
 from flask import Flask, jsonify, make_response, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from models import *
 
 POSTGRES = {
     'user': 'smartlot_db_admin',
@@ -12,22 +14,11 @@ POSTGRES = {
 
 app = Flask(__name__, static_url_path='/static')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
 db = SQLAlchemy(app)
 
-lots = [
-    {
-        'id': 1,
-        'title': u'asdf',
-        'description': u'asdf'
-    },
-    {
-        'id': 2,
-        'title': u'asdf',
-        'description': u'asdf'
-    }
-]
+
 
 @app.route('/')
 def index():
@@ -45,16 +36,23 @@ def upload_file():
 def get_tasks():
     return jsonify({'lots': lots})
 
-@app.route('/smart-lot/lots/<int:lot_id>', methods=['GET'])
-def get_lot(lot_id):
-    lot = [lot for lot in lots if lot['id'] == lot_id]
-    if len(lot) == 0:
+@app.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
+def get_lot(lot_name):
+    print(lot_name)
+    lot_info = db.session.query(eval(lot_name)).all()
+    rows = []
+    for row in lot_info:
+        rows.append(row.as_dict())
+    if len(lot_info) == 0:
         abort(404)
-    return jsonify({'lot': lot[0]})
+    response = jsonify(rows)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
 
 
 ### POST for JSON data if we need it down the road ###
@@ -70,6 +68,10 @@ def not_found(error):
 #     }
 #     tasks.append(lot)
 #     return jsonify({'lot': lot}), 201
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
