@@ -44,7 +44,7 @@ import cv2
 # # implementation)
 # image = cv2.imread(args["image"])
 
-# image = cv2.resize(image, (1200, 800))
+# #image = cv2.resize(image, (1200, 800))
 
 # (h, w) = image.shape[:2]
 # blob = cv2.dnn.blobFromImage(image, 0.007843,
@@ -90,18 +90,18 @@ import cv2
 #run using 'python detection.py'
 
 cascade_src = './detection-models/cars.xml'
-img = cv2.imread('./images/back_of_car.png')
-img = cv2.resize(img, (800, 800))
+img = cv2.imread('./Nethken_lot.png')
+img = cv2.resize(img, (1000, 800))
 car_cascade = cv2.CascadeClassifier(cascade_src)
 
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-cars = car_cascade.detectMultiScale(img, 1.1, 1)
+cars = car_cascade.detectMultiScale(img, 1.1, 2)
 
 for (x,y,w,h) in cars:
-	cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)      
+	cv2.rectangle(img,(x,y),(x+w-20,y+h-20),(0,0,255),2)      
 
 cv2.imshow('image', img)
-cv2.waitKey(0)
+cv2.waitKey(300000)
 
