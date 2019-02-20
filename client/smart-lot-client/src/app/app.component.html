@@ -3,8 +3,10 @@
   <h1 style="padding-bottom: 0; margin-bottom: 0;">
     {{ title }}
   </h1>
-  <h3 style="color:darkgrey" class="mat-h3">A <span style="color:lightcoral">smarter</span> way to park.</h3>
+  <h3 style="color:darkgrey" class="mat-h3">a <span style="color:lightcoral">smarter</span> way to park</h3>
 </div>
 
 
-<router-outlet></router-outlet>
+<div [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">
+  <router-outlet #o="outlet"></router-outlet>
+</div>
