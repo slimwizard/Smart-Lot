@@ -63,28 +63,25 @@ def get_lot(lot_name):
 def flag_bit(api_flag):
     global FLAG
     FLAG = api_flag
-    simulate_activity()
-    return 'testy'
+    return simulate_activity()
 
 
 def simulate_activity():
     global FLAG
-    while FLAG:
-        spots = db.session.query(NethkenA).all()
-        for i in sample(range(1, len(spots)), 3):
-            temp_spot = db.session.query(
-                NethkenA).filter_by(spot_number=i).first()
-            if temp_spot.spot_number == i and temp_spot.occupied == True:
-                row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=True))
-                db.session.commit()
-            elif temp_spot.spot_number == i and temp_spot.occupied == False:
-                row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=False))
-                db.session.commit()
-        print(''.join(['spot: {}\noccupied:{}\n'.format(
-            i.spot_number, i.occupied) for i in spots]))
-        sleep(15)
+    spots = db.session.query(NethkenA).all()
+    for i in sample(range(1, len(spots)), 3):
+        temp_spot = db.session.query(
+            NethkenA).filter_by(spot_number=i).first()
+        if temp_spot.spot_number == i and temp_spot.occupied == True:
+            row_changed = db.session.query(NethkenA).filter_by(
+                spot_number=i).update(dict(occupied=True))
+            db.session.commit()
+        elif temp_spot.spot_number == i and temp_spot.occupied == False:
+            row_changed = db.session.query(NethkenA).filter_by(
+                spot_number=i).update(dict(occupied=False))
+            db.session.commit()
+    return ''.join(['spot: {}\noccupied:{}\n'.format(
+        i.spot_number, i.occupied) for i in spots])
 
 
 @app.errorhandler(404)
