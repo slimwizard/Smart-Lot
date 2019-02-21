@@ -2,8 +2,7 @@
 <div class="main-content">
   <div><h4 class="mat-h4">Find campus parking:</h4></div>
 
-<div class="about">
-  <button mat-mini-fab routerLink="/about" routerLinkActive="active" >?</button>
+  <div>
     <mat-expansion-panel [expanded]="false">
       <mat-expansion-panel-header>
         <mat-panel-title id="LouisianaTechCampus">
@@ -14,7 +13,7 @@
             <mat-list-item mat-list-item > <button mat-button routerLink="/nethkenA" routerLinkActive="active" id="NethkenButton">Nethken A</button> </mat-list-item>
         </mat-list>
     </mat-expansion-panel>
-  </div>
+</div>
 
   <div>
     <mat-card class="lots-near-you-card">
@@ -48,5 +47,8 @@
         </mat-card-content>
       </mat-card>
   </div>
-  
+  <div class="about">
+    <button mat-mini-fab routerLink="/about" routerLinkActive="active" >?</button>
+  </div>
 </div>
+
