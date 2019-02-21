@@ -8,14 +8,12 @@ from decimal import Decimal
 Base = declarative_base()
 metadata = Base.metadata
 
-
 class Parking(Base):
     __tablename__ = 'parking'
 
     type_id = Column(SmallInteger, primary_key=True, server_default=text(
         "nextval('parking_type_id_seq'::regclass)"))
     type_label = Column(Text, nullable=False)
-
 
 class NethkenA(Base):
     __tablename__ = 'nethken_a'

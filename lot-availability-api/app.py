@@ -25,7 +25,6 @@ db = SQLAlchemy(app)
 def index():
     return "Hewwo wowwd"
 
-
 @app.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -34,11 +33,9 @@ def upload_file():
     file.save("static/test.jpg")
     return "Saved successfully"
 
-
 @app.route('/smart-lot/lots', methods=['GET'])
 def get_tasks():
     return jsonify({'lots': lots})
-
 
 @app.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
 def get_lot(lot_name):
@@ -53,22 +50,17 @@ def get_lot(lot_name):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
-
 def get_all_rows():
     rows = db.session.query(NethkenA).all()
     return rows
 
-
 # flag should be 0 or 1
 # 1 being true, 0 being false
-
-
 @app.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
 def flag_bit(api_flag):
     spots = simulate_activity(api_flag)
     return ''.join(['spot: {}\noccupied:{}\n'.format(
         i.spot_number, i.occupied) for i in spots])
-
 
 def simulate_activity(flag):
     if flag:
@@ -88,11 +80,9 @@ def simulate_activity(flag):
     else:
         return "stopped"
 
-
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
 
 ### POST for JSON data if we need it down the road ###
 # @app.route('/smatr-lot/lots', methods=['POST'])
@@ -107,5 +97,6 @@ def not_found(error):
 #     }
 #     tasks.append(lot)
 #     return jsonify({'lot': lot}), 201
+
 if __name__ == '__main__':
     app.run(debug=True)
