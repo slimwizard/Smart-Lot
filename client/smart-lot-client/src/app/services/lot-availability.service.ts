@@ -16,6 +16,11 @@ export class LotAvailabilityService {
     let url = this.api_url_dev + lot
     return this.http.get<ParkingSpot[]>(url)
   }
+
+  getLotsByLocation(location: string): Observable<ParkingLot[]> {
+    let url = this.api_url_dev + "by_location/" + location
+    return this.http.get<ParkingLot[]>(url)
+  }
 }
 
 export interface ParkingSpot {
@@ -26,4 +31,11 @@ export interface ParkingSpot {
   longitude: number
   occupied: boolean
 
+}
+
+export interface ParkingLot {
+  latitude: number
+  longitude: number
+  lot_id: string
+  lot_name: number
 }
