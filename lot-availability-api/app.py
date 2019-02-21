@@ -1,7 +1,9 @@
 #!python
-from sqlalchemy.dialects.postgresql import UUID
 from flask import Flask, jsonify, make_response, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from time import sleep
+from random import sample
+from sqlalchemy.dialects.postgresql import UUID
 from models import *
 import geopy.distance
 
@@ -20,10 +22,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%
 db = SQLAlchemy(app)
 
 
-
 @app.route('/')
 def index():
-    return "Hello, World!"
+    return "Hewwo wowwd"
 
 @app.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
@@ -67,12 +68,40 @@ def get_lots_by_location(lat_long):
     response = jsonify(lots)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+    
+def get_all_rows():
+    rows = db.session.query(NethkenA).all()
+    return rows
+
+# flag should be 0 or 1
+# 1 being true, 0 being false
+@app.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
+def flag_bit(api_flag):
+    spots = simulate_activity(api_flag)
+    return ''.join(['spot: {}\noccupied:{}\n'.format(
+        i.spot_number, i.occupied) for i in spots])
+
+def simulate_activity(flag):
+    if flag:
+        spots = db.session.query(NethkenA).all()
+        for i in sample(range(1, len(spots)), 3):
+            temp_spot = db.session.query(
+                NethkenA).filter_by(spot_number=i).first()
+            if temp_spot.spot_number == i and temp_spot.occupied == True:
+                row_changed = db.session.query(NethkenA).filter_by(
+                    spot_number=i).update(dict(occupied=True))
+                db.session.commit()
+            elif temp_spot.spot_number == i and temp_spot.occupied == False:
+                row_changed = db.session.query(NethkenA).filter_by(
+                    spot_number=i).update(dict(occupied=False))
+                db.session.commit()
+        return spots
+    else:
+        return "stopped"
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
-
 
 ### POST for JSON data if we need it down the road ###
 # @app.route('/smatr-lot/lots', methods=['POST'])
@@ -87,10 +116,6 @@ def not_found(error):
 #     }
 #     tasks.append(lot)
 #     return jsonify({'lot': lot}), 201
-
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
