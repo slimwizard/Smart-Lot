@@ -3,3 +3,8 @@
     margin-left: auto;
     margin-right: auto;
   }
+
+p {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}

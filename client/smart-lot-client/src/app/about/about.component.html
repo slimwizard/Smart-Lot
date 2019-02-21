@@ -3,13 +3,20 @@
   <hr/>
   <h2 style="padding-bottom: 0; margin-bottom: 0;">How to use Smart Lot</h2>
 </div>
-<div style="text-align:left;">
-  <p style="margin-left: 10px;">Smart Lot allows you to find parking without the hassle of driving up and down aisles in a lot. <br>
-    Simply open the app, select a parking lot near you, and you will be given a bird's eye view of the parking lot from your phone.<br>
-    Red spots indicate that the parking spot is taken and green spots indicate available parking.<br>
-    Certain spots may be designated different colors depending on the location such as handicap spots or other reserved spots.<br>
-  </p>
-</div>
+
+<mat-card class="card" style="margin-bottom: 10px;margin-top: 10px;">
+    <mat-card-content style="margin-left: 10px;">
+        <p style="text-align: center">Smart Lot allows you to find parking without the hassle of driving up and down aisles in a lot. </p>
+        <p>
+          Simply open the app, select a parking lot near you, and you will be given a bird's eye view of the parking lot from your phone.</p>
+          <p><span style="color: red">Red</span> spots indicate that the parking spot is <i>occupied</i> and <span style="color: green">green</span> spots indicate <i>available</i> parking.</p>
+          <p>Certain spots may be designated different colors depending on the location such as handicap spots or other reserved spots.</p>
+        
+        <a mat-button class="backButton" routerLink="/home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" class="material-icons" viewBox="0 0 24 24"><path  d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"/><path fill="none" d="M0 0h24v24H0z"/></svg>
+            Back</a>
+    </mat-card-content>  
+  </mat-card>
+
 <img src="https://drive.google.com/uc?id=1suE8Bj4xY3rdsO4Wqfu1_V97MB31xSwZ" class="center" alt="Smart Lot">
 
-<router-outlet></router-outlet>
