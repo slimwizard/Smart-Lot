@@ -9,6 +9,7 @@ import { ParkingLot, LotAvailabilityService } from '../services/lot-availability
 })
 export class HomeComponent implements OnInit {
 
+  links = ["Nethken A","About"]
   constructor(private lotAvailibilityService: LotAvailabilityService) { }
   isLoading: boolean = true; 
   currentLat: String;
