@@ -20,8 +20,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%
 
 db = SQLAlchemy(app)
 
-FLAG = 0
-
 
 @app.route('/')
 def index():
@@ -55,33 +53,40 @@ def get_lot(lot_name):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
+def get_all_rows():
+    rows = db.session.query(NethkenA).all()
+    return rows
+
+
 # flag should be 0 or 1
 # 1 being true, 0 being false
 
 
 @app.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
 def flag_bit(api_flag):
-    global FLAG
-    FLAG = api_flag
-    return simulate_activity()
-
-
-def simulate_activity():
-    global FLAG
-    spots = db.session.query(NethkenA).all()
-    for i in sample(range(1, len(spots)), 3):
-        temp_spot = db.session.query(
-            NethkenA).filter_by(spot_number=i).first()
-        if temp_spot.spot_number == i and temp_spot.occupied == True:
-            row_changed = db.session.query(NethkenA).filter_by(
-                spot_number=i).update(dict(occupied=True))
-            db.session.commit()
-        elif temp_spot.spot_number == i and temp_spot.occupied == False:
-            row_changed = db.session.query(NethkenA).filter_by(
-                spot_number=i).update(dict(occupied=False))
-            db.session.commit()
+    spots = simulate_activity(api_flag)
     return ''.join(['spot: {}\noccupied:{}\n'.format(
         i.spot_number, i.occupied) for i in spots])
+
+
+def simulate_activity(flag):
+    if flag:
+        spots = db.session.query(NethkenA).all()
+        for i in sample(range(1, len(spots)), 3):
+            temp_spot = db.session.query(
+                NethkenA).filter_by(spot_number=i).first()
+            if temp_spot.spot_number == i and temp_spot.occupied == True:
+                row_changed = db.session.query(NethkenA).filter_by(
+                    spot_number=i).update(dict(occupied=True))
+                db.session.commit()
+            elif temp_spot.spot_number == i and temp_spot.occupied == False:
+                row_changed = db.session.query(NethkenA).filter_by(
+                    spot_number=i).update(dict(occupied=False))
+                db.session.commit()
+        return spots
+    else:
+        return "stopped"
 
 
 @app.errorhandler(404)
