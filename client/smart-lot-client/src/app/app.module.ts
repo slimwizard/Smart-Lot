@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { MatExpansionModule, MatCardModule, MatButtonModule, MatListModule, MatProgressSpinnerModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
-import { NethkenAComponent } from './nethken-a/nethken-a.component'
+import { NethkenAComponent } from './nethken-a/nethken-a.component';
+import { AboutComponent } from './about/about.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    NethkenAComponent
+    NethkenAComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
