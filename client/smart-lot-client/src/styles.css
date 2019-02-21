@@ -33,7 +33,7 @@ grid-template-columns: 1fr 2fr;
 
 
 mat-card{
-    width: 350px;
+    width: 320px;
     height: auto;
     display: block;
     margin-left:auto;

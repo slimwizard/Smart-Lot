@@ -89,11 +89,11 @@ def simulate_activity(flag):
                 NethkenA).filter_by(spot_number=i).first()
             if temp_spot.spot_number == i and temp_spot.occupied == True:
                 row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=True))
+                    spot_number=i).update(dict(occupied=False))
                 db.session.commit()
             elif temp_spot.spot_number == i and temp_spot.occupied == False:
                 row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=False))
+                    spot_number=i).update(dict(occupied=True))
                 db.session.commit()
         return spots
     else:

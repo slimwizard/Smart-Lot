@@ -5,7 +5,7 @@ if [ $# -eq 1 ]; then
 		echo "test mode starting"
 		while true; do
 			curl -s -i localhost:5000/smart-lot/test/1 &
-			sleep 20
+			sleep 10
 		done
 	else
 		curl -s -i localhost:5000/smart-lot/test/0 &

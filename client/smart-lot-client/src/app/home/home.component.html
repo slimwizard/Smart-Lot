@@ -23,7 +23,7 @@
           <mat-card-title id="lots-near-you-text">Lots Near You:</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-
+        
           <div style="text-align: center;">
             <mat-progress-spinner style="margin:0 auto;" *ngIf="isLoading"
                 [mode]="mode"
@@ -37,14 +37,16 @@
             {{ lot.name }}
           </a>
           </div>
-
-          <div *ngIf="!geolocation_permission && !isLoading">
-            <p>Please allow geolocation permission in order to use this service.</p>
+          <div style="text-align: left; padding-left: 10px; padding-right: 10px; ">
+            <div *ngIf="!geolocation_permission && !isLoading">
+              <p>Please allow geolocation permission in order to use this service.</p>
+            </div>
+  
+            <div *ngIf="no_lots && !isLoading">
+              <p>There are no Smart Lots near you</p>
+            </div>
           </div>
-
-          <div *ngIf="no_lots && !isLoading">
-            <p>There are no Smart Lots near you</p>
-          </div>
+          
 
         </mat-card-content>
       </mat-card>
