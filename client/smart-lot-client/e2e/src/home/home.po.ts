@@ -15,6 +15,10 @@ export class HomePage {
 
   getNethkenButton() {
     return element(by.id('NethkenButton'));
-  }    
+  }
+  
+  getLotsNearYouText() {
+    return element(by.id('lots-near-you-text'))
+  }
   
 }

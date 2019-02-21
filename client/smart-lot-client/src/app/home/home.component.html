@@ -5,15 +5,49 @@
 
 
   <div>
-      <mat-expansion-panel [expanded]="false">
-        <mat-expansion-panel-header>
-          <mat-panel-title id="LouisianaTechCampus">
-            Louisiana Tech
-          </mat-panel-title>
-        </mat-expansion-panel-header> 
-          <mat-list>
-              <mat-list-item mat-list-item > <button mat-button routerLink="/nethkenA" routerLinkActive="active" id="NethkenButton">Nethken A</button> </mat-list-item>
-          </mat-list>
-      </mat-expansion-panel>
-    </div>
+    <mat-expansion-panel [expanded]="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title id="LouisianaTechCampus">
+          Louisiana Tech
+        </mat-panel-title>
+      </mat-expansion-panel-header> 
+        <mat-list>
+            <mat-list-item mat-list-item > <button mat-button routerLink="/nethkenA" routerLinkActive="active" id="NethkenButton">Nethken A</button> </mat-list-item>
+        </mat-list>
+    </mat-expansion-panel>
+  </div>
+
+  <div>
+    <mat-card class="lots-near-you-card">
+        <mat-card-header>
+          <mat-card-title id="lots-near-you-text">Lots Near You:</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+          <div style="text-align: center;">
+            <mat-progress-spinner style="margin:0 auto;" *ngIf="isLoading"
+                [mode]="mode"
+                [value]="value"
+                [diameter]=20>
+            </mat-progress-spinner>
+          </div>
+          
+          <div *ngIf="!isLoading" >
+          <a mat-button *ngFor="let lot of lots" routerLink={{lot.routerLink}}>
+            {{ lot.name }}
+          </a>
+          </div>
+
+          <div *ngIf="!geolocation_permission && !isLoading">
+            <p>Please allow geolocation permission in order to use this service.</p>
+          </div>
+
+          <div *ngIf="no_lots && !isLoading">
+            <p>There are no Smart Lots near you</p>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+  </div>
+  
 </div>

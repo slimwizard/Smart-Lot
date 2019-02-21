@@ -5,6 +5,7 @@ from time import sleep
 from random import sample
 from sqlalchemy.dialects.postgresql import UUID
 from models import *
+import geopy.distance
 
 POSTGRES = {
     'user': 'smartlot_db_admin',
@@ -50,6 +51,24 @@ def get_lot(lot_name):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+@app.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
+def get_lots_by_location(lat_long):
+    print(lat_long)
+    location_list = lat_long.split(",")
+    my_coords = (location_list[0], location_list[1])
+    lots = []
+    lot_info = db.session.query(eval("Lots")).all()
+    for row in lot_info:
+        lot_coords = (row.latitude, row.longitude)
+        if geopy.distance.distance(my_coords, lot_coords).mi < 20:
+            lots.append(row.as_dict())
+
+    if len(lot_info) == 0:
+        abort(404)
+    response = jsonify(lots)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+    
 def get_all_rows():
     rows = db.session.query(NethkenA).all()
     return rows

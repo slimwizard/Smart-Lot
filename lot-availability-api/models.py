@@ -35,3 +35,17 @@ class NethkenA(Base):
             if isinstance(table_as_dict[c], Decimal):
                 table_as_dict[c] = float(table_as_dict[c])
         return table_as_dict
+
+class Lots(Base):
+    __tablename__ = 'lots'
+    lot_name = Column(Text, nullable=False)
+    latitude = Column(Numeric(10, 6))
+    longitude = Column(Numeric(10, 6))
+    lot_id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+
+    def as_dict(self):
+        table_as_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        for c in table_as_dict:
+           if isinstance(table_as_dict[c], Decimal):
+               table_as_dict[c] = float(table_as_dict[c])
+        return table_as_dict
