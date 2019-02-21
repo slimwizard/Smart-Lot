@@ -27,6 +27,11 @@ describe('running home page tests', () => {
         browser.sleep(2000)
         expect(browser.driver.getCurrentUrl()).toContain('/nethkenA');
     });
+
+    it('should display a card titled "Lots Near You"', () => {
+        expect(homePage.getLotsNearYouText()).toEqual('Lots Near You:')
+    });
+
     })
 
 

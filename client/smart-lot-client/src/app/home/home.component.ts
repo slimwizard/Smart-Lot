@@ -17,15 +17,29 @@ export class HomeComponent implements OnInit {
   lot_name: String;
   lot_names: any;
   lots: any;
+  no_lots: Boolean;
+  geolocation_permission: Boolean;
+  color = 'primary';
+  mode = 'indeterminate';
+  value = 50;
+  
+
   loadLotsNearYou() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
+        this.geolocation_permission = true;
         this.currentLat = String(position.coords.latitude);
         this.currentLong = String(position.coords.longitude);
         this.currentPosition = this.currentLat + "," + this.currentLong
-        console.log(this.currentPosition)
         this.getLotsByLocation(this.currentPosition);
+      },
+      
+      error => { 
+        if (error.code == error.PERMISSION_DENIED)
+            this.geolocation_permission = false;
+            this.isLoading = false;
       });
+
     } else {
       alert("Geolocation is not supported by this browser.");
     }
@@ -37,7 +51,7 @@ export class HomeComponent implements OnInit {
       this.lots = []
       this.lot_names = data.map(item => item.lot_name);
       if (this.lot_names.length == 0){
-        this.lots.push( {name: "There Are No Lots Near You" , routerLink: "/"})
+        this.no_lots = true;
       }
       for (let i of this.lot_names) {
         this.lots.push( {name: this.formatName(i) , routerLink: this.formatRouterLink(i)} )
