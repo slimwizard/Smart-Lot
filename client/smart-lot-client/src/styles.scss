@@ -1,5 +1,9 @@
 
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/_theming.scss';
+@include mat-core();
+
+$default-theme: mat-dark-theme(mat-palette($mat-green, A400), mat-palette($mat-light-blue, A400));
+
 html, body { height: 100%; } 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -29,6 +33,10 @@ grid-template-columns: 1fr 2fr;
 .mat-card {
     padding: 1px;
     padding-top: 10px; 
+}
+
+.night-mode {
+    @include angular-material-theme($default-theme);
 }
 
 

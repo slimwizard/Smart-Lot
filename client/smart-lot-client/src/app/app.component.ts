@@ -13,7 +13,7 @@ import {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   animations: [
     trigger('fadeAnimation', [
 
@@ -60,18 +60,15 @@ export class AppComponent {
     if (this.nightMode === true) {
       document.body.style.backgroundColor = "#2d2d2d"
       document.body.style.color = "#edf3ff"
+      document.body.className = 'night-mode'
 
     }
     else {
       document.body.style.backgroundColor = "white"
       document.body.style.color = "black"
-
+      document.body.className = ''
     }
-    
-
   }
-
-
 }
 
 

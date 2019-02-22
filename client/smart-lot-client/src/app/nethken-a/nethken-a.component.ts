@@ -6,7 +6,7 @@ import { ParkingSpot, LotAvailabilityService } from '../services/lot-availabilit
 @Component({
   selector: 'app-nethken-a',
   templateUrl: './nethken-a.component.html',
-  styleUrls: ['./nethken-a.component.css']
+  styleUrls: ['./nethken-a.component.scss']
 })
 
 export class NethkenAComponent implements OnInit {
