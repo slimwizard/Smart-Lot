@@ -49,9 +49,26 @@ import {
 export class AppComponent {
   title = 'SMART LOT';
   aboutPageActive: boolean = false
+  nightMode: boolean = false
 
   onAboutPage() {
     this.aboutPageActive = !this.aboutPageActive
+  }
+
+  changeVisibility() {
+    this.nightMode = !this.nightMode;
+    if (this.nightMode === true) {
+      document.body.style.backgroundColor = "#2d2d2d"
+      document.body.style.color = "#edf3ff"
+
+    }
+    else {
+      document.body.style.backgroundColor = "white"
+      document.body.style.color = "black"
+
+    }
+    
+
   }
 
 

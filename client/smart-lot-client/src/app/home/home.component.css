@@ -4,6 +4,10 @@
     right: 2%;
 }
 
+.mat-h4 {
+    margin: 0 0 3px;
+}
+
 .mat-accent {
     background-color: lightcoral;
 }
