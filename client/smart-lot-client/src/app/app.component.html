@@ -12,5 +12,5 @@
 </div>
 
 <div id="about">
-  <button mat-mini-fab routerLink="/about" routerLinkActive="active" >?</button>
+  <button mat-mini-fab routerLink="/about"  [routerLinkActive]="'about-is-active'" class="about-spinner" click="onAboutPage()">?</button>
 </div>

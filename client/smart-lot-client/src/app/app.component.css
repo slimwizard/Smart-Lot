@@ -1,8 +1,32 @@
 #about {
     position:fixed;
-    right:-10px;
-    bottom:4px;
+    bottom:0px;
+    right:8px;
+    
     height:50px;
-    width:100%;
+
     background: none;
+
  }
+
+.about-spinner {
+    animation: fadeinspin 1s linear 1 forwards;
+    opacity: 0;
+
+}
+
+.about-is-active {
+    opacity: 1;
+    animation: fadeoutspin 1s linear 1 forwards;
+}
+
+@keyframes fadeinspin {
+    0% { opacity: 0; transform:rotate(0deg) }
+    100% { opacity: 1; transform:rotate(360deg)}
+}
+  
+  
+@keyframes fadeoutspin {
+    0% { opacity: 1; transform:rotate(0deg) }
+    100% { opacity: 0; transform:rotate(360deg)}
+}

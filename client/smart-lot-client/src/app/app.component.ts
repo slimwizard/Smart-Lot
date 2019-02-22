@@ -48,6 +48,11 @@ import {
 })
 export class AppComponent {
   title = 'SMART LOT';
+  aboutPageActive: boolean = false
+
+  onAboutPage() {
+    this.aboutPageActive = !this.aboutPageActive
+  }
 
 
 }

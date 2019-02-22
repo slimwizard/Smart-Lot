@@ -9,10 +9,10 @@
         <p style="text-align: center">Smart Lot allows you to find parking without the hassle of driving up and down aisles in a lot. </p>
         <p>
           Simply open the app, select a parking lot near you, and you will be given a bird's eye view of the parking lot from your phone.</p>
-          <p><span style="color: red">Red</span> spots indicate that the parking spot is <i>occupied</i> and <span style="color: green">green</span> spots indicate <i>available</i> parking.</p>
+          <p><span style="color: red">Red</span> indicates that a parking spot is <i>occupied</i> and <span style="color: green">green</span> indicates <i>available</i> parking.</p>
           <p>Certain spots may be designated different colors depending on the location such as handicap spots or other reserved spots.</p>
         
-        <a mat-button class="backButton" routerLink="/home">
+        <a mat-button class="backButton" (click)="backClicked()">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" class="material-icons" viewBox="0 0 24 24"><path  d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"/><path fill="none" d="M0 0h24v24H0z"/></svg>
             Back</a>
     </mat-card-content>  
