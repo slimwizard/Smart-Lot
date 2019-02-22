@@ -13,12 +13,16 @@ export class HomePage {
     return element(by.id('LouisianaTechCampus')).getText() as Promise<string>;
   }
 
+  getPanelHeader() {
+    return element(by.id('panel-header'));
+  }
+
   getNethkenButton() {
     return element(by.id('NethkenButton'));
   }
   
   getLotsNearYouText() {
-    return element(by.id('lots-near-you-text'))
+    return element(by.id('lots-near-you-text')).getText() as Promise<string>;
   }
   
 }

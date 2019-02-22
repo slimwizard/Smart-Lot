@@ -22,18 +22,15 @@ describe('running home page tests', () => {
     })
 
     it('Should redirect to Nethken A when button is clicked', () => {
+        const panelHeader = homePage.getPanelHeader();
+        panelHeader.click();
         const nethkenAButton = homePage.getNethkenButton();
+        browser.sleep(1000);
         nethkenAButton.click();
-        browser.sleep(2000)
         expect(browser.driver.getCurrentUrl()).toContain('/nethkenA');
     });
 
-    it('should display a card titled "Lots Near You"', () => {
-        expect(homePage.getLotsNearYouText()).toEqual('Lots Near You:')
-    });
-
     })
-
 
     afterEach(async () => {
     // Assert that there are no errors emitted from the browser
