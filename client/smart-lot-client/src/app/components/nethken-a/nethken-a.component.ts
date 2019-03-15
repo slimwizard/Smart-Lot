@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule, MatButtonModule, MatProgressSpinner } from '@angular/material'
-import { ParkingSpot, LotAvailabilityService } from '../services/lot-availability.service';
+import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service';
 
 
 @Component({
