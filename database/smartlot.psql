@@ -1,11 +1,11 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-
-
 DROP DATABASE IF EXISTS smartlot;
 CREATE DATABASE smartlot;
 
-DROP IF EXISTS lot;
+DROP IF EXISTS Campuses;
+DROP IF EXISTS Lots;
+DROP IF EXISTS Spots;
 DROP IF EXISTS parking;
 
 CREATE TABLE parking (
@@ -13,11 +13,34 @@ CREATE TABLE parking (
     type_label text
 );
 
-CREATE TABLE lot (
+CREATE TABLE Spots (
     spot_id uuid DEFAULT uuid_generate_v4 ()
     spot_number int NOT NULL,
     latitude decimal,
     longitude decimal,
     parking_type int,
-    occupied boolean
+    availability boolean,
+    lot_id 
 );
+
+CREATE TABLE Lots (
+    lot_id DEFAULT uuid_generate_v4 (),
+    lot_name varchar(50),
+    description varchar(200),
+    latitude decimal,
+    longitude decimal,
+    campus_id DEFAULT uuid_generate_v4 (),
+    spot_count int,
+    lot_number varchar(15)
+);
+
+CREATE TABLE Campuses (
+    campus_id DEFAULT uuid_generate_v4 (),
+    campus_name varchar(50), 
+    address varchar(75),
+    city varchar(20),
+    state char(2),
+    zip int,
+    lot_count int
+);
+
