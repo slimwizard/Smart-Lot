@@ -9,33 +9,33 @@ DROP IF EXISTS Spots;
 DROP IF EXISTS parking;
 
 CREATE TABLE parking (
-    parking_type int SERIAL,
+    parking_type int SERIAL PRIMARY KEY,
     type_label text
 );
 
 CREATE TABLE Spots (
-    spot_id uuid DEFAULT uuid_generate_v4 ()
+    spot_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     spot_number int NOT NULL,
     latitude decimal,
     longitude decimal,
     parking_type int,
     availability boolean,
-    lot_id 
+    lot_id uuid REFERENCES Lots(lot_id)
 );
 
 CREATE TABLE Lots (
-    lot_id DEFAULT uuid_generate_v4 (),
+    lot_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     lot_name varchar(50),
     description varchar(200),
     latitude decimal,
     longitude decimal,
-    campus_id DEFAULT uuid_generate_v4 (),
+    campus_id uuid REFERENCES Campuses(campus_id),
     spot_count int,
     lot_number varchar(15)
 );
 
 CREATE TABLE Campuses (
-    campus_id DEFAULT uuid_generate_v4 (),
+    campus_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
     campus_name varchar(50), 
     address varchar(75),
     city varchar(20),
