@@ -1,11 +1,19 @@
 #!python
-from flask import Flask, jsonify, make_response, request, send_from_directory
+from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for
+from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from time import sleep
 from random import sample
 from sqlalchemy.dialects.postgresql import UUID
 from models import *
 import geopy.distance
+from PIL import Image
+import os
+from pathlib import Path
+
+UPLOAD_FOLDER = Path("../images/")
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
 POSTGRES = {
     'user': 'smartlot_db_admin',
@@ -18,6 +26,7 @@ POSTGRES = {
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+app.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 
 db = SQLAlchemy(app)
 
@@ -68,7 +77,26 @@ def get_lots_by_location(lat_long):
     response = jsonify(lots)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
-    
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
+def receive_image(lot_id, key):
+    if 'file' not in request.files:
+        return "ERROR: File upload failed. No file in payload."
+    file = request.files['file']
+
+    if file.filename == '':
+        return "ERROR: File upload failed. File has no filename."
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        img = Image.open(UPLOAD_FOLDER / filename)
+        img.show()
+        return "File uploaded successfully"
+
 def get_all_rows():
     rows = db.session.query(NethkenA).all()
     return rows
