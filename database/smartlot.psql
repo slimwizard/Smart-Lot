@@ -3,24 +3,19 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP DATABASE IF EXISTS smartlot;
 CREATE DATABASE smartlot;
 
-DROP IF EXISTS Campuses;
-DROP IF EXISTS Lots;
-DROP IF EXISTS Spots;
-DROP IF EXISTS parking;
+DROP TABLE IF EXISTS Spots;
+DROP TABLE IF EXISTS parking;
+DROP TABLE IF EXISTS Lots;
+DROP TABLE IF EXISTS Campuses;
 
-CREATE TABLE parking (
-    parking_type int SERIAL PRIMARY KEY,
-    type_label text
-);
-
-CREATE TABLE Spots (
-    spot_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
-    spot_number int NOT NULL,
-    latitude decimal,
-    longitude decimal,
-    parking_type int,
-    availability boolean,
-    lot_id uuid REFERENCES Lots(lot_id)
+CREATE TABLE Campuses (
+    campus_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
+    campus_name text, 
+    address text,
+    city varchar(20),
+    state char(2),
+    zip int,
+    lot_count int
 );
 
 CREATE TABLE Lots (
@@ -34,13 +29,17 @@ CREATE TABLE Lots (
     lot_number varchar(15)
 );
 
-CREATE TABLE Campuses (
-    campus_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
-    campus_name varchar(50), 
-    address varchar(75),
-    city varchar(20),
-    state char(2),
-    zip int,
-    lot_count int
+CREATE TABLE parking (
+    parking_type int SERIAL PRIMARY KEY,
+    type_label varchar(20)
 );
 
+CREATE TABLE Spots (
+    spot_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
+    spot_number int NOT NULL,
+    latitude decimal,
+    longitude decimal,
+    parking_type int REFERENCES parking(parking_type),
+    availability boolean,
+    lot_id uuid REFERENCES Lots(lot_id)
+);
