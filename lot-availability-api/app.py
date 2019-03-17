@@ -83,19 +83,23 @@ def allowed_file(filename):
 
 @app.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
-    if 'file' not in request.files:
-        return "ERROR: File upload failed. No file in payload."
-    file = request.files['file']
+    if key == "shoop":
+        if 'file' not in request.files:
+            return "ERROR: File upload failed. No file in payload."
+        file = request.files['file']
 
-    if file.filename == '':
-        return "ERROR: File upload failed. File has no filename."
+        if file.filename == '':
+            return "ERROR: File upload failed. File has no filename."
 
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        img = Image.open(UPLOAD_FOLDER / filename)
-        img.show()
-        return "File uploaded successfully"
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            img = Image.open(UPLOAD_FOLDER / filename)
+            img = img.rotate(5)
+            img.show()
+            return "File uploaded successfully"
+    else:
+        return "ERROR: Invalid key."
 
 def get_all_rows():
     rows = db.session.query(NethkenA).all()
