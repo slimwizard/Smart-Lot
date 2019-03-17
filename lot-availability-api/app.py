@@ -96,7 +96,14 @@ def receive_image(lot_id, key):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             img = Image.open(UPLOAD_FOLDER / filename)
             img = img.rotate(5)
-            img.show()
+            img.save(UPLOAD_FOLDER / filename)
+            
+            row = []
+            row1_spot_len = 85
+            for i in range(320, 700, row1_spot_len):
+                row.append(img.crop((i, 440, i+row1_spot_len, 540)))
+            for i in row:
+                i.show()
             return "File uploaded successfully"
     else:
         return "ERROR: Invalid key."
