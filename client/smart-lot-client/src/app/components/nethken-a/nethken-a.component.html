@@ -1,4 +1,9 @@
-<div class="main-content grid">
+<div style="text-align: center; margin-top: 30px;">
+        <mat-progress-spinner style="margin:0 auto;" *ngIf="isLoading" [mode]="mode" [value]="value" [diameter]=40>
+        </mat-progress-spinner>
+    </div>
+
+<div class="main-content grid" *ngIf="!isLoading">
     <div style="text-align: center;">
         <mat-card class="card" style="margin-bottom: 10px;">
             <mat-card-header>
@@ -272,13 +277,10 @@
             </div>
         </mat-card>
     </div>
-    <div style="text-align: center; margin-top: 30px;">
-        <mat-progress-spinner style="margin:0 auto;" *ngIf="isLoading" [mode]="mode" [value]="value" [diameter]=40>
-        </mat-progress-spinner>
-    </div>
+    
 
     <!-- map svg  -->
-    <!-- <div *ngIf="!isLoading" style=" height: 100px;" class="map">
+    <div  style=" height: 100px;" class="map">
         <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
             xmlns="http://www.w3.org/2000/svg" id="svg8" version="1.1" viewBox="0 0 210 297" height="100mm"
@@ -484,7 +486,7 @@
                     x="199.60446" y="13.612813" />
             </g>
         </svg>
-    </div>  -->
+    </div> 
 </div>
 
 <div style="width: 0; visibility: hidden;">

@@ -15,12 +15,13 @@ export class NethkenAComponent implements OnInit {
   constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService) { }
   occupiedSpots;
 
-  isLoading: boolean = false 
+  isLoading: boolean = true 
   color = 'primary'
   mode = 'indeterminate'
   value = 50
   currentWeather: string
   currentTemp: string
+  isNight: boolean
   weatherResponses = {
     "Clear" : false, 
     "Clouds": false,
@@ -29,8 +30,7 @@ export class NethkenAComponent implements OnInit {
     "Drizzle" : false,
     "Thunderstorm" : false
   }
-  isNight: boolean
-
+  
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
   }
@@ -40,17 +40,18 @@ export class NethkenAComponent implements OnInit {
     this.lotAvailibilityService.getLotData("NethkenA").subscribe(data => {
       this.isLoading = true;
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
-      setTimeout(() => {this.isLoading=false}, 1000)
+      // use first parking spot location for weather coordinates
+      this.getLotWeather(data[0].latitude, data[0].longitude)
     })
   }
 
-  getLotWeather(): void {
-    this.weatherService.getWeather("32.520530", "-92.146500").subscribe(data => {
-      console.log(data)
+  getLotWeather(lat, lon): void {
+    this.weatherService.getWeather(String(lat), String(lon)).subscribe(data => {
       this.weatherResponses[data.weather[0].main] = true
       this.currentWeather = data.weather[0].description
       this.currentTemp = data.main.temp
       this.isNight = data.weather[0].icon.charAt(data.weather[0].icon.length-1) === 'n' ? true : false
+      setTimeout(() => {this.isLoading=false}, 1000)
     }, error => console.log(error))
   }
 
@@ -58,8 +59,7 @@ export class NethkenAComponent implements OnInit {
 
 
   ngOnInit() {
-    //this.getLotAvailibility()
-    this.getLotWeather()
+    this.getLotAvailibility()
   }
 }
 
