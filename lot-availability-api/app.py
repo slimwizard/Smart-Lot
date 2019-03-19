@@ -106,7 +106,7 @@ def receive_image(lot_id, key):
                 i.show()
             return "File uploaded successfully"
     else:
-        return "ERROR: Invalid key."
+        return "ERROR: Invalid key.", 405 
 
 def get_all_rows():
     rows = db.session.query(NethkenA).all()
