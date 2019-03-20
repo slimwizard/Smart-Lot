@@ -1,0 +1,1 @@
+INSERT INTO Campuses (campus_name, address, city, state, zip, lot_count) VALUES ("Louisiana Tech", "305 Wisteria St", "Ruston", "LA", "71272", 2)
