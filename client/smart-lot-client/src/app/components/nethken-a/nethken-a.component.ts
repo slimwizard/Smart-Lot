@@ -2,6 +2,16 @@ import { Component, OnInit } from '@angular/core'
 
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
 import { WeatherService } from '../../services/weather/weather.service'
+import {
+  transition,
+  trigger,
+  query,
+  style,
+  animate,
+  group,
+  animateChild,
+  state
+} from '@angular/animations';
 
 
 @Component({
@@ -42,7 +52,7 @@ export class NethkenAComponent implements OnInit {
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates
       this.getLotWeather(data[0].latitude, data[0].longitude)
-    })
+    }, error => console.log(error))
   }
 
   getLotWeather(lat, lon): void {
