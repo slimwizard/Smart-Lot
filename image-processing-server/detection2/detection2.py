@@ -7,10 +7,14 @@ import cv2
 from utils import *
 from make_model import *
 import time
+import sys
 
 seed = 11
 rnd.seed(seed)
 np.random.seed(seed)
+
+print(sys.argv[1])
+sys.exit()
 
 ############################
 #### EDIT ONLY THIS BLOCK

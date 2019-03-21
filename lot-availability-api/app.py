@@ -9,7 +9,9 @@ from models import *
 import geopy.distance
 from PIL import Image
 import os
+import subprocess
 from pathlib import Path
+import numpy as np
 
 UPLOAD_FOLDER = Path("../images/")
 
@@ -98,12 +100,19 @@ def receive_image(lot_id, key):
             img = img.rotate(5)
             img.save(UPLOAD_FOLDER / filename)
             
-            row = []
+            row = {}
+            spot_id = 0
             row1_spot_len = 85
             for i in range(320, 700, row1_spot_len):
-                row.append(img.crop((i, 440, i+row1_spot_len, 540)))
+                spot_id += 1
+                row[spot_id] = img.crop((i, 440, i+row1_spot_len, 540))
             for i in row:
-                i.show()
+                row[i].convert('RGB')
+                cv_tmp = np.array(row[i])
+                cv_tmp = cv_tmp[:, :, ::-1].copy()
+                subprocess.run(('python3',
+                    '../image-processing-server/detection2/detection2.py',
+                    '{}'.format(cv_tmp)))
             return "File uploaded successfully"
     else:
         return "ERROR: Invalid key.", 405 

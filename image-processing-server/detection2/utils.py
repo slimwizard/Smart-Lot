@@ -35,7 +35,7 @@ def updown(x,y):
 
 def extractLargerSegment(maskROAD):
 
-    _, contours, hierarchy = cv2.findContours(maskROAD.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(maskROAD.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
     maxA = 0
     maskTemp=np.zeros_like(maskROAD)
