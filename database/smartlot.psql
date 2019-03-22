@@ -3,10 +3,10 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP DATABASE IF EXISTS smartlot;
 CREATE DATABASE smartlot;
 
-DROP TABLE IF EXISTS Spots;
-DROP TABLE IF EXISTS parking;
-DROP TABLE IF EXISTS Lots;
-DROP TABLE IF EXISTS Campuses;
+DROP TABLE IF EXISTS Spots CASCADE;
+DROP TABLE IF EXISTS parking CASCADE;
+DROP TABLE IF EXISTS Lots CASCADE;
+DROP TABLE IF EXISTS Campuses CASCADE;
 
 CREATE TABLE Campuses (
     campus_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
@@ -30,7 +30,7 @@ CREATE TABLE Lots (
 );
 
 CREATE TABLE parking (
-    parking_type int SERIAL PRIMARY KEY,
+    parking_type SERIAL PRIMARY KEY,
     type_label varchar(20)
 );
 
