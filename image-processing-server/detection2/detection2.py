@@ -14,18 +14,17 @@ rnd.seed(seed)
 np.random.seed(seed)
 
 print(sys.argv[1])
-sys.exit()
 
 ############################
 #### EDIT ONLY THIS BLOCK
 
 #videofile = './test_video.mp4'
-imagefile = './../../images/NethkenA-cropped-row1.png'
+imagefile = '../image-processing-server/detection2/tmp'
 frame = cv2.imread(imagefile)
 #cv2.imshow("im", frame)
 
 model = make_model()
-model.load_weights('weights_best_detection2.h5')
+model.load_weights('../image-processing-server/detection2/weights_best_detection2.h5')
 
 lower = [0, 0, 0]
 upper = [100, 100, 100]

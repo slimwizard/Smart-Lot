@@ -107,12 +107,10 @@ def receive_image(lot_id, key):
                 spot_id += 1
                 row[spot_id] = img.crop((i, 440, i+row1_spot_len, 540))
             for i in row:
-                row[i].convert('RGB')
-                cv_tmp = np.array(row[i])
-                cv_tmp = cv_tmp[:, :, ::-1].copy()
+                row[i].save('../image-processing-server/detection2/tmp', format='PNG')
                 subprocess.run(('python3',
                     '../image-processing-server/detection2/detection2.py',
-                    '{}'.format(cv_tmp)))
+                    'tmp'))
             return "File uploaded successfully"
     else:
         return "ERROR: Invalid key.", 405 
