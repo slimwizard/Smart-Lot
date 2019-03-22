@@ -15,8 +15,8 @@ class Parking(Base):
         "nextval('parking_type_id_seq'::regclass)"))
     type_label = Column(Text, nullable=False)
 
-class NethkenA(Base):
-    __tablename__ = 'nethken_a'
+class Spots(Base):
+    __tablename__ = 'Spots'
 
     spot_id = Column(UUID, primary_key=True,
                      server_default=text("uuid_generate_v4()"))
@@ -24,9 +24,11 @@ class NethkenA(Base):
     latitude = Column(Numeric(10, 6))
     longitude = Column(Numeric(10, 6))
     parking_type = Column(ForeignKey('parking.type_id'))
-    occupied = Column(Boolean)
+    availability = Column(Boolean)
+    lot_id = Column(ForeignKey('Lots.lot_id'))
 
     parking = relationship('Parking')
+    Lots = relationship('Lots')
 
     def as_dict(self):
         table_as_dict = {c.name: getattr(self, c.name)
@@ -37,11 +39,17 @@ class NethkenA(Base):
         return table_as_dict
 
 class Lots(Base):
-    __tablename__ = 'lots'
+    __tablename__ = 'Lots'
+    lot_id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     lot_name = Column(Text, nullable=False)
+    description = Column(Text)
     latitude = Column(Numeric(10, 6))
     longitude = Column(Numeric(10, 6))
-    lot_id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    campus_id = Column(ForeignKey('Campuses.campus_id'))
+    lot_number = Column(Numeric)
+
+    Campuses = relationship('Campuses')
+
 
     def as_dict(self):
         table_as_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -49,3 +57,12 @@ class Lots(Base):
            if isinstance(table_as_dict[c], Decimal):
                table_as_dict[c] = float(table_as_dict[c])
         return table_as_dict
+
+class Campuses(Base):
+    __tablename__ = 'Campuses'
+    campus_id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    campus_name = Column(Text, nullable=False)
+    address = Column(Text)
+    city = Column(Text)
+    state = Column(Text)
+    zip = Column(Numeric)
