@@ -1,1 +1,1 @@
-INSERT INTO Lots (lot_name, description, latitude, longitude, campus_id, spot_count, lot_number) VALUES ('Nethkin A', 'Lot behind Nethkin Hall', '32.525291', '-92.644706', '84f62126-df2f-4c19-861a-22b0a7bc3db7', 20, 1)
+INSERT INTO Lots (lot_name, description, latitude, longitude, campus_id, lot_number) VALUES ('Nethkin A', 'Lot behind Nethkin Hall', '32.525291', '-92.644706', '84f62126-df2f-4c19-861a-22b0a7bc3db7', 1)

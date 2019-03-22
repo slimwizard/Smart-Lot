@@ -14,8 +14,7 @@ CREATE TABLE Campuses (
     address text,
     city varchar(20),
     state char(2),
-    zip int,
-    lot_count int
+    zip int
 );
 
 CREATE TABLE Lots (
@@ -25,7 +24,6 @@ CREATE TABLE Lots (
     latitude decimal,
     longitude decimal,
     campus_id uuid REFERENCES Campuses(campus_id),
-    spot_count int,
     lot_number varchar(15)
 );
 
