@@ -69,8 +69,8 @@ def get_lots_by_location(lat_long):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
     
-def get_all_rows():
-    rows = db.session.query(NethkenA).all()
+def get_all_rows(table_name):
+    rows = db.session.query(table_name).all()
     return rows
 
 # flag should be 0 or 1
@@ -81,18 +81,18 @@ def flag_bit(api_flag):
     return ''.join(['spot: {}\noccupied:{}\n'.format(
         i.spot_number, i.occupied) for i in spots])
 
-def simulate_activity(flag):
+def simulate_activity(table_name, flag):
     if flag:
-        spots = db.session.query(NethkenA).all()
+        spots = db.session.query(table_name).all()
         for i in sample(range(1, len(spots)), 3):
             temp_spot = db.session.query(
-                NethkenA).filter_by(spot_number=i).first()
+                table_name).filter_by(spot_number=i).first()
             if temp_spot.spot_number == i and temp_spot.occupied == True:
-                row_changed = db.session.query(NethkenA).filter_by(
+                row_changed = db.session.query(table_name).filter_by(
                     spot_number=i).update(dict(occupied=False))
                 db.session.commit()
             elif temp_spot.spot_number == i and temp_spot.occupied == False:
-                row_changed = db.session.query(NethkenA).filter_by(
+                row_changed = db.session.query(table_name).filter_by(
                     spot_number=i).update(dict(occupied=True))
                 db.session.commit()
         return spots
