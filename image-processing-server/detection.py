@@ -89,8 +89,8 @@ import cv2
 
 #run using 'python detection.py'
 
-cascade_src = './detection-models/cars.xml'
-img = cv2.imread('./Nethken_lot.png')
+cascade_src = '../image-processing-server/detection-models/cars.xml'
+img = cv2.imread('../image-processing-server/tmp')
 img = cv2.resize(img, (1000, 800))
 car_cascade = cv2.CascadeClassifier(cascade_src)
 
@@ -102,6 +102,7 @@ cars = car_cascade.detectMultiScale(img, 1.1, 2)
 for (x,y,w,h) in cars:
 	cv2.rectangle(img,(x,y),(x+w-20,y+h-20),(0,0,255),2)      
 
+print(cars)
 cv2.imshow('image', img)
 cv2.waitKey(300000)
 

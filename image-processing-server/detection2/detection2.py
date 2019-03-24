@@ -46,7 +46,8 @@ img_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
 # Find the pixels that correspond to road
 img_out = cv2.inRange(img_hsv, lower, upper)
-
+cv2.imshow('road', img_out)
+cv2.waitKey(0)
 ############################
 
 # Clean from noisy pixels and keep only the largest connected segment
@@ -64,7 +65,7 @@ image_masked = cv2.resize(image_masked,None, fx=s,fy=s)
 
 #Run the sliding window detection process
 bbox_list, totalWindows, correct, score = detectionProcess(cv2.cvtColor(frame,cv2.COLOR_BGR2RGB), model, winH=50, winW=50, depth=3, nb_images=1, scale=1, stepSize=stepSize, thres_score=0.05)
-
+print(bbox_list)
 #Draw the detections
 drawBoxes(frame, bbox_list)
 

@@ -7,7 +7,7 @@ from random import sample
 from sqlalchemy.dialects.postgresql import UUID
 from models import *
 import geopy.distance
-from PIL import Image
+from PIL import Image, ImageEnhance
 import os
 import subprocess
 from pathlib import Path
@@ -107,9 +107,12 @@ def receive_image(lot_id, key):
                 spot_id += 1
                 row[spot_id] = img.crop((i, 440, i+row1_spot_len, 540))
             for i in row:
-                row[i].save('../image-processing-server/detection2/tmp', format='PNG')
+                cont = ImageEnhance.Contrast(row[i]).enhance(3.0)
+                bright = ImageEnhance.Brightness(cont).enhance(1.0)
+                sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
+                sharp.save('../image-processing-server/tmp', format='PNG')
                 subprocess.run(('python3',
-                    '../image-processing-server/detection2/detection2.py',
+                    '../image-processing-server/detection.py',
                     'tmp'))
             return "File uploaded successfully"
     else:
