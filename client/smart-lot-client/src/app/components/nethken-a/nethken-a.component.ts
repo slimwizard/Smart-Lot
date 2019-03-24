@@ -23,7 +23,8 @@ import {
 export class NethkenAComponent implements OnInit {
 
   constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService) { }
-  occupiedSpots;
+  occupiedSpots
+  weatherError: boolean
 
   isLoading: boolean = true 
   color = 'primary'
@@ -62,11 +63,13 @@ export class NethkenAComponent implements OnInit {
       this.currentTemp = data.main.temp
       this.isNight = data.weather[0].icon.charAt(data.weather[0].icon.length-1) === 'n' ? true : false
       setTimeout(() => {this.isLoading=false}, 1000)
-    }, error => console.log(error))
+    }, error => {
+      this.weatherError = true
+      setTimeout(() => {this.isLoading=false}, 1000)
+    })
   }
 
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
-
 
   ngOnInit() {
     this.getLotAvailibility()

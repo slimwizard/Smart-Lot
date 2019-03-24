@@ -1,6 +1,5 @@
 
 import {NethkenAPage} from './nethkenA.po'
-
 import { browser, logging } from 'protractor';
 
 
@@ -19,29 +18,32 @@ describe('running Nethken A tests', () => {
   });
 
   it('should display lot description', () => {
-    expect(nethkenAPage.getLotDescriptionText()).toEqual('The parking lot adjacent to the back of Nethken Hall')
+    expect(nethkenAPage.getLotDescriptionText()).toEqual('The parking lot adjacent to the back of Nethken Hall');
   })
 
   it('should display back button', () => {
-    expect(nethkenAPage.getBackButton().isDisplayed()).toBeTruthy()
+    expect(nethkenAPage.getBackButton().isDisplayed()).toBeTruthy();
   })
 
   it('should navigate home when back button is clicked', () => {
-    const backButton = nethkenAPage.getBackButton()
+    const backButton = nethkenAPage.getBackButton();
     backButton.click();
     expect(browser.driver.getCurrentUrl()).toContain('/home');
   })
 
   it('should display refresh button', () => {
-    expect(nethkenAPage.getRefreshButton().isDisplayed()).toBeTruthy()
+    expect(nethkenAPage.getRefreshButton().isDisplayed()).toBeTruthy();
   })
 
   it('should display display svg map', () => {
-    expect(nethkenAPage.getMap()).toBeTruthy()
+    expect(nethkenAPage.getMap()).toBeTruthy();
   })
 
+  it('should display display weather data', () => {
+    expect(nethkenAPage.getWeatherDetails().isDisplayed()).toBeTruthy();
+    
+  })
 })
-
 
 afterEach(async () => {
   // Assert that there are no errors emitted from the browser

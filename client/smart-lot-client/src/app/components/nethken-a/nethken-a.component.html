@@ -11,7 +11,7 @@
                 <mat-card-subtitle class="lotDescription">The parking lot adjacent to the back of Nethken Hall
                 </mat-card-subtitle>
             </mat-card-header>
-            <mat-card-content class="weather-grid">
+            <mat-card-content *ngIf="!weatherError" class="weather-grid">
                 <div id="storm-icon" class="weather-icon" *ngIf="weatherResponses['Thunderstorm']"  matTooltip="storm" [matTooltipPosition]="'left'">
                     <svg height="511pt" viewBox="0 0 511 511.99995" width="511pt" xmlns="http://www.w3.org/2000/svg">
                         <path
