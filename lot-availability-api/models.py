@@ -9,7 +9,7 @@ Base = declarative_base()
 metadata = Base.metadata
 
 class Parking(Base):
-    __tablename__ = 'parking'
+    __tablename__ = 'Parking'
 
     type_id = Column(SmallInteger, primary_key=True, server_default=text(
         "nextval('parking_type_id_seq'::regclass)"))
@@ -23,7 +23,7 @@ class Spots(Base):
     spot_number = Column(Integer, nullable=False)
     latitude = Column(Numeric(10, 6))
     longitude = Column(Numeric(10, 6))
-    parking_type = Column(ForeignKey('parking.type_id'))
+    parking_type = Column(ForeignKey('Parking.type_id'))
     availability = Column(Boolean)
     lot_id = Column(ForeignKey('Lots.lot_id'))
 
@@ -65,4 +65,11 @@ class Campuses(Base):
     address = Column(Text)
     city = Column(Text)
     state = Column(Text)
-    zip = Column(Numeric)
+    zipcode = Column(Numeric)
+
+    def as_dict(self):
+        table_as_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        for c in table_as_dict:
+           if isinstance(table_as_dict[c], Decimal):
+               table_as_dict[c] = float(table_as_dict[c])
+        return table_as_dict
