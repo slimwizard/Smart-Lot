@@ -170,3 +170,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 __pycache__/models.cpython-36.pyc
+
+
+## Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+.ebignore
