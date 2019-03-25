@@ -6,13 +6,14 @@ from random import sample
 from sqlalchemy.dialects.postgresql import UUID
 from models import *
 import geopy.distance
+import os
 
 POSTGRES = {
-    'user': 'smartlot_db_admin',
-    'pw': 'smarterparking1',
-    'db': 'smartlot_db_public2',
-    'host': 'smartlot-db-public2.cxzkctjwsfey.us-east-1.rds.amazonaws.com',
-    'port': '5432',
+    'user': os.environ['DB_USER'],
+    'pw': os.environ['DB_PW'],
+    'db': os.environ['DB_NAME'],
+    'host': os.environ['DB_HOST'],
+    'port': os.environ['DB_PORT'],
 }
 
 application = Flask(__name__)
