@@ -9,26 +9,26 @@ Base = declarative_base()
 metadata = Base.metadata
 
 class Parking(Base):
-    __tablename__ = 'Parking'
+    __tablename__ = 'parking'
 
     type_id = Column(SmallInteger, primary_key=True, server_default=text(
         "nextval('parking_type_id_seq'::regclass)"))
     type_label = Column(Text, nullable=False)
 
 class Spots(Base):
-    __tablename__ = 'Spots'
+    __tablename__ = 'spots'
 
     spot_id = Column(UUID, primary_key=True,
                      server_default=text("uuid_generate_v4()"))
     spot_number = Column(Integer, nullable=False)
     latitude = Column(Numeric(10, 6))
     longitude = Column(Numeric(10, 6))
-    parking_type = Column(ForeignKey('Parking.type_id'))
+    parking_type = Column(ForeignKey('parking.type_id'))
     availability = Column(Boolean)
-    lot_id = Column(ForeignKey('Lots.lot_id'))
+    lot_id = Column(ForeignKey('lots.lot_id'))
 
     parking = relationship('Parking')
-    Lots = relationship('Lots')
+    lots = relationship('Lots')
 
     def as_dict(self):
         table_as_dict = {c.name: getattr(self, c.name)
@@ -39,7 +39,7 @@ class Spots(Base):
         return table_as_dict
 
 class Lots(Base):
-    __tablename__ = 'Lots'
+    __tablename__ = 'lots'
     lot_id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     lot_name = Column(Text, nullable=False)
     description = Column(Text)

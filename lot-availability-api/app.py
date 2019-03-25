@@ -77,13 +77,13 @@ def get_all_rows(table_name):
 # 1 being true, 0 being false
 @app.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
 def flag_bit(lot_id=None, api_flag=None):
-    spots = simulate_activity('lot_id', 1)
-    return ''.join(['spot: {}\noccupied:{}\n'.format(
-        i.spot_number, i.occupied) for i in spots])
+    updated_spots = simulate_activity('lot_id', 1)
+    return ''.join(['spot: {}\navailability:{},\n\n'.format(
+        i.spot_number, i.availability) for i in updated_spots])
 
 def simulate_activity(lot, flag):
     if flag:
-        spots = db.session.query(eval("Spots")).all()
+        spots = db.session.query(Spots).all()
         # for i in sample(range(1, len(spots)), 3):
         #     temp_spot = db.session.query(
         #         lot_name).filter_by(spot_number=i).first()
