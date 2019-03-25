@@ -76,19 +76,11 @@ def get_all_rows(table_name):
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
-<<<<<<< HEAD:lot-availability-api/app.py
 @app.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
 def flag_bit(lot_id=None, api_flag=None):
     updated_spots = simulate_activity('lot_id', 1)
     return ''.join(['spot:{}\navailability:{}\n'.format(
         i.spot_number, i.availability) for i in updated_spots])
-=======
-@application.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
-def flag_bit(api_flag):
-    spots = simulate_activity(api_flag)
-    return ''.join(['spot: {}\noccupied:{}\n'.format(
-        i.spot_number, i.occupied) for i in spots])
->>>>>>> 23e2c565e326b53494321b0c7ea6f73fb0c158d1:lot-availability-api/application.py
 
 def simulate_activity(lot, flag):
     if flag:
