@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {MatExpansionModule, matExpansionAnimations, MatButtonModule, MatNavList, MatCardModule} from '@angular/material';
-import { ParkingLot, LotAvailabilityService } from '../services/lot-availability.service';
+import { ParkingLot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service';
 
 @Component({
   selector: 'app-home',

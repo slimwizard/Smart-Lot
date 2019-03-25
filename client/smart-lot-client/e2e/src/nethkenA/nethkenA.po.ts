@@ -18,11 +18,15 @@ export class NethkenAPage {
   }
 
   getRefreshButton() {
-      return element(by.className('refreshButton'))
+    return element(by.className('refreshButton'))
   }
 
   getMap() {
-      return element(by.className('map')).isDisplayed() as Promise<boolean>;
+    return element(by.className('map')).isDisplayed() as Promise<boolean>;
+  }
+
+  getWeatherDetails() {
+    return element(by.className('weather-grid'))
   }
     
 }
