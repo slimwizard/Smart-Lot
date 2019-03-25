@@ -1,0 +1,99 @@
+.material-icons {
+    padding-bottom: 2px;
+}
+
+.mat-card {
+    padding: 1px;
+    padding-top: 10px; 
+    padding-bottom: 10px;
+    grid-area: card;
+}
+
+.weather-icon svg {
+    width: 45px;
+    height: 45px;
+}
+
+.lot-title {
+    text-align: left;
+    
+}
+
+// .grid {
+//     display: grid;
+//     grid-template-columns: 2fr 1fr;
+//     grid-template-rows: auto;
+//     grid-template-areas: 
+//         "card map"
+//         "card map";
+//     justify-items: center;
+// }
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "card" "map";
+    justify-items: center;
+
+}
+
+
+.map {
+    grid-area: map;
+}
+
+mat-card {
+    width: auto;
+    text-align: center;
+    margin-top: -20px;
+}
+
+#button-section {
+    margin-top: 8%;
+}
+
+
+.weather-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto;
+    grid-template-areas: 
+        "weathericon weatherdata"
+        "weathericon weatherdata";
+    justify-items: center;
+    align-items: center;
+    width: 150px;
+    margin-left: 27%;
+    font-size: 12px;
+}
+
+
+
+.weather-icon {
+    grid-area: weathericon;
+}
+
+#weather-data {
+    grid-area: weatherdata;
+    
+}
+
+#weather-data p{ 
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+@media only screen
+and (max-width : 880px) {
+
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        grid-template-areas: "card" "map";
+        justify-items: center;
+
+    }
+}

@@ -6,27 +6,28 @@ from random import sample
 from sqlalchemy.dialects.postgresql import UUID
 from models import *
 import geopy.distance
+import os
 
 POSTGRES = {
-    'user': 'smartlot_db_admin',
-    'pw': 'smarterparking1',
-    'db': 'smartlot_db_public2',
-    'host': 'smartlot-db-public2.cxzkctjwsfey.us-east-1.rds.amazonaws.com',
-    'port': '5432',
+    'user': os.environ['DB_USER'],
+    'pw': os.environ['DB_PW'],
+    'db': os.environ['DB_NAME'],
+    'host': os.environ['DB_HOST'],
+    'port': os.environ['DB_PORT'],
 }
 
-app = Flask(__name__, static_url_path='/static')
+application = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(application)
 
 
-@app.route('/')
+@application.route('/')
 def index():
     return "Hewwo wowwd"
 
-@app.route('/smart-lot/lots/upload', methods=['POST'])
+@application.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return "No file"
@@ -34,11 +35,11 @@ def upload_file():
     file.save("static/test.jpg")
     return "Saved successfully"
 
-@app.route('/smart-lot/lots', methods=['GET'])
+@application.route('/smart-lot/lots', methods=['GET'])
 def get_tasks():
     return jsonify({'lots': lots})
 
-@app.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
+@application.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
 def get_lot(lot_name):
     print(lot_name)
     lot_info = db.session.query(eval(lot_name)).all()
@@ -51,7 +52,7 @@ def get_lot(lot_name):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
-@app.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
+@application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
 def get_lots_by_location(lat_long):
     print(lat_long)
     location_list = lat_long.split(",")
@@ -75,11 +76,19 @@ def get_all_rows(table_name):
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
+<<<<<<< HEAD:lot-availability-api/app.py
 @app.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
 def flag_bit(lot_id=None, api_flag=None):
     updated_spots = simulate_activity('lot_id', 1)
     return ''.join(['spot:{}\navailability:{}\n'.format(
         i.spot_number, i.availability) for i in updated_spots])
+=======
+@application.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
+def flag_bit(api_flag):
+    spots = simulate_activity(api_flag)
+    return ''.join(['spot: {}\noccupied:{}\n'.format(
+        i.spot_number, i.occupied) for i in spots])
+>>>>>>> 23e2c565e326b53494321b0c7ea6f73fb0c158d1:lot-availability-api/application.py
 
 def simulate_activity(lot, flag):
     if flag:
@@ -96,7 +105,7 @@ def simulate_activity(lot, flag):
     else:
         return "stopped"
 
-@app.errorhandler(404)
+@application.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
@@ -115,4 +124,4 @@ def not_found(error):
 #     return jsonify({'lot': lot}), 201
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run()
