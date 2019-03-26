@@ -101,7 +101,7 @@ def receive_image(lot_id, key):
 
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
             img = Image.open(UPLOAD_FOLDER / filename)
             img = img.rotate(5)
             img.save(UPLOAD_FOLDER / filename)
@@ -122,8 +122,14 @@ def receive_image(lot_id, key):
                                          'tmp'), stdout=subprocess.PIPE)
                 output = proc.communicate()[0]
                 if output.decode('utf-8').strip() == 'SUCCESS':
-                    print('Yeet')
-            return "File uploaded successfully"
+                    row_changed = db.session.query(Spots).filter_by(spot_number=i).update(dict(availability=False))
+                    db.session.commit()
+                    print('Spot {} availability updated to {}'.format(i, True))
+                else:
+                    row_changed = db.session.query(Spots).filter_by(spot_number=i).update(dict(availability=True))
+                    db.session.commit()
+                    print('Spot {} availability updated to {}'.format(i, True))
+            return "File uploaded successfully", 200
     else:
         return "ERROR: Invalid key.", 405
 
