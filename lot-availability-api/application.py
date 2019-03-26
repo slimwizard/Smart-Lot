@@ -41,7 +41,7 @@ def get_tasks():
 
 @application.route('/smart-lot/lots/<id>', methods=['GET'])
 def get_lot(id):
-    lot_info = db.session.query(Lots).filter_by(lot_id=id)
+    lot_info = db.session.query(Spots).filter_by(lot_id=id)
     rows = []
     for row in lot_info:
         rows.append(row.as_dict())
