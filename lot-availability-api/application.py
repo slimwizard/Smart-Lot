@@ -18,26 +18,27 @@ UPLOAD_FOLDER = Path("../images/")
 ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
 POSTGRES = {
-    'user': 'smartlot_db_admin',
-    'pw': 'smarterparking1',
-    'db': 'smartlot_db_public2',
-    'host': 'smartlot-db-public2.cxzkctjwsfey.us-east-1.rds.amazonaws.com',
-    'port': '5432',
+    'user': os.environ['DB_USER'],
+    'pw': os.environ['DB_PW'],
+    'db': os.environ['DB_NAME'],
+    'host': os.environ['DB_HOST'],
+    'port': os.environ['DB_PORT'],
 }
 
-app = Flask(__name__, static_url_path='/static')
+application = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
-app.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
+application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(application)
 
 
-@app.route('/')
+@application.route('/')
 def index():
     return "Hewwo wowwd"
 
-@app.route('/smart-lot/lots/upload', methods=['POST'])
+
+@application.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return "No file"
@@ -45,11 +46,13 @@ def upload_file():
     file.save("static/test.jpg")
     return "Saved successfully"
 
-@app.route('/smart-lot/lots', methods=['GET'])
+
+@application.route('/smart-lot/lots', methods=['GET'])
 def get_tasks():
     return jsonify({'lots': lots})
 
-@app.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
+
+@application.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
 def get_lot(lot_name):
     print(lot_name)
     lot_info = db.session.query(eval(lot_name)).all()
@@ -62,7 +65,8 @@ def get_lot(lot_name):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
-@app.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
+
+@application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
 def get_lots_by_location(lat_long):
     print(lat_long)
     location_list = lat_long.split(",")
@@ -80,10 +84,12 @@ def get_lots_by_location(lat_long):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
+
+@application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
     if key == "shoop":
         if 'file' not in request.files:
@@ -99,7 +105,7 @@ def receive_image(lot_id, key):
             img = Image.open(UPLOAD_FOLDER / filename)
             img = img.rotate(5)
             img.save(UPLOAD_FOLDER / filename)
-            
+
             row = {}
             spot_id = 0
             row1_spot_len = 85
@@ -112,14 +118,15 @@ def receive_image(lot_id, key):
                 sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
                 sharp.save('../image-processing-server/tmp', format='PNG')
                 proc = subprocess.Popen(('python3',
-                    '../image-processing-server/detection.py',
-                    'tmp'), stdout=subprocess.PIPE)
+                                         '../image-processing-server/detection.py',
+                                         'tmp'), stdout=subprocess.PIPE)
                 output = proc.communicate()[0]
                 if output.decode('utf-8').strip() == 'SUCCESS':
                     print('Yeet')
             return "File uploaded successfully"
     else:
-        return "ERROR: Invalid key.", 405 
+        return "ERROR: Invalid key.", 405
+
 
 def get_all_rows():
     rows = db.session.query(NethkenA).all()
@@ -127,11 +134,14 @@ def get_all_rows():
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
-@app.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
+
+
+@application.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
 def flag_bit(api_flag):
     spots = simulate_activity(api_flag)
     return ''.join(['spot: {}\noccupied:{}\n'.format(
         i.spot_number, i.occupied) for i in spots])
+
 
 def simulate_activity(flag):
     if flag:
@@ -151,7 +161,8 @@ def simulate_activity(flag):
     else:
         return "stopped"
 
-@app.errorhandler(404)
+
+@application.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
@@ -169,5 +180,6 @@ def not_found(error):
 #     tasks.append(lot)
 #     return jsonify({'lot': lot}), 201
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run()
