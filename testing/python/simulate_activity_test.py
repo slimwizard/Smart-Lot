@@ -8,12 +8,12 @@ from random import sample
 from sqlalchemy.dialects.postgresql import UUID
 script_path = "../../lot-availability-api/"
 sys.path.append(os.path.abspath(script_path))
-import app
+import application
 from models import *
 
 class TestSimulateActivity(unittest.TestCase):
-    test_occ = [i.availability for i in app.simulate_activity('a19f71fc-4d20-4790-9e38-31df6a02ac76', 1)]
-    occ = [i.availability for i in app.get_all_rows(Spots)]
+    test_occ = [i.availability for i in application.simulate_activity('a19f71fc-4d20-4790-9e38-31df6a02ac76', 1)]
+    occ = [i.availability for i in application.get_all_rows(Spots)]
 
     @unittest.expectedFailure
     def test_random(self):
