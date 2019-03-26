@@ -102,7 +102,5 @@ cars = car_cascade.detectMultiScale(img, 1.1, 2)
 for (x,y,w,h) in cars:
 	cv2.rectangle(img,(x,y),(x+w-20,y+h-20),(0,0,255),2)      
 
-print(cars)
-cv2.imshow('image', img)
-cv2.waitKey(300000)
-
+if cars.size:
+    print('SUCCESS')

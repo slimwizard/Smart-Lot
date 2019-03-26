@@ -111,9 +111,12 @@ def receive_image(lot_id, key):
                 bright = ImageEnhance.Brightness(cont).enhance(1.0)
                 sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
                 sharp.save('../image-processing-server/tmp', format='PNG')
-                subprocess.run(('python3',
+                proc = subprocess.Popen(('python3',
                     '../image-processing-server/detection.py',
-                    'tmp'))
+                    'tmp'), stdout=subprocess.PIPE)
+                output = proc.communicate()[0]
+                if output.decode('utf-8').strip() == 'SUCCESS':
+                    print('Yeet')
             return "File uploaded successfully"
     else:
         return "ERROR: Invalid key.", 405 
