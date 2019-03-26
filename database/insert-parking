@@ -1,2 +1,0 @@
-INSERT INTO parking (type_label) VALUES ('white');
-INSERT INTO parking (type_label) VALUES ('blue');

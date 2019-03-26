@@ -101,7 +101,8 @@ def receive_image(lot_id, key):
 
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(
+                application.config['UPLOAD_FOLDER'], filename))
             img = Image.open(UPLOAD_FOLDER / filename)
             img = img.rotate(5)
             img.save(UPLOAD_FOLDER / filename)
@@ -122,11 +123,13 @@ def receive_image(lot_id, key):
                                          'tmp'), stdout=subprocess.PIPE)
                 output = proc.communicate()[0]
                 if output.decode('utf-8').strip() == 'SUCCESS':
-                    row_changed = db.session.query(Spots).filter_by(spot_number=i).update(dict(availability=False))
+                    row_changed = db.session.query(Spots).filter_by(
+                        spot_number=i).update(dict(availability=False))
                     db.session.commit()
                     print('Spot {} availability updated to {}'.format(i, True))
                 else:
-                    row_changed = db.session.query(Spots).filter_by(spot_number=i).update(dict(availability=True))
+                    row_changed = db.session.query(Spots).filter_by(
+                        spot_number=i).update(dict(availability=True))
                     db.session.commit()
                     print('Spot {} availability updated to {}'.format(i, True))
             return "File uploaded successfully", 200
@@ -134,34 +137,34 @@ def receive_image(lot_id, key):
         return "ERROR: Invalid key.", 405
 
 
-def get_all_rows():
-    rows = db.session.query(NethkenA).all()
+def get_all_rows(table_name):
+    rows = db.session.query(table_name).all()
     return rows
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
 
 
-@application.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
-def flag_bit(api_flag):
-    spots = simulate_activity(api_flag)
-    return ''.join(['spot: {}\noccupied:{}\n'.format(
-        i.spot_number, i.occupied) for i in spots])
+@application.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
+def flag_bit(lot_id=None, api_flag=None):
+    updated_spots = simulate_activity('lot_id', 1)
+    return ''.join(['spot:{}\navailability:{}\n'.format(
+        i.spot_number, i.availability) for i in updated_spots])
 
 
-def simulate_activity(flag):
+def simulate_activity(lot, flag):
     if flag:
-        spots = db.session.query(NethkenA).all()
+        spots = db.session.query(Spots).all()
         for i in sample(range(1, len(spots)), 3):
             temp_spot = db.session.query(
-                NethkenA).filter_by(spot_number=i).first()
-            if temp_spot.spot_number == i and temp_spot.occupied == True:
-                row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=False))
+                Spots).filter_by(spot_number=i).first()
+            if temp_spot.spot_number == i and temp_spot.availability == True:
+                row_changed = db.session.query(Spots).filter_by(
+                    spot_number=i).update(dict(availability=False))
                 db.session.commit()
-            elif temp_spot.spot_number == i and temp_spot.occupied == False:
-                row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=True))
+            elif temp_spot.spot_number == i and temp_spot.availability == False:
+                row_changed = db.session.query(Spots).filter_by(
+                    spot_number=i).update(dict(availability=True))
                 db.session.commit()
         return spots
     else:
