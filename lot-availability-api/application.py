@@ -39,10 +39,10 @@ def upload_file():
 def get_tasks():
     return jsonify({'lots': lots})
 
-@application.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
-def get_lot(lot_name):
-    print(lot_name)
-    lot_info = db.session.query(eval(lot_name)).all()
+@application.route('/smart-lot/lots/<id>', methods=['GET'])
+def get_lot(id):
+    # print(id)
+    lot_info = db.session.query(Spots).filter_by(lot_id=lot)
     rows = []
     for row in lot_info:
         rows.append(row.as_dict())
@@ -84,7 +84,7 @@ def flag_bit(lot_id=None, api_flag=None):
 
 def simulate_activity(lot, flag):
     if flag:
-        spots = db.session.query(Spots).all()
+        spots = db.session.query(Spots).filter_by(lot_id=lot)
         for i in sample(range(1, len(spots)), 3):
             temp_spot = db.session.query(Spots).filter_by(spot_number=i).first()
             if temp_spot.spot_number == i and temp_spot.availability == True:
