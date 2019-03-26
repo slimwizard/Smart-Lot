@@ -104,3 +104,5 @@ for (x,y,w,h) in cars:
 
 if cars.size:
     print('SUCCESS')
+else:
+    print('FAILURE')

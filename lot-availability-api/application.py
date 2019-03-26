@@ -32,11 +32,9 @@ application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 
 db = SQLAlchemy(application)
 
-
 @application.route('/')
 def index():
     return "Hewwo wowwd"
-
 
 @application.route('/smart-lot/lots/upload', methods=['POST'])
 def upload_file():
@@ -46,11 +44,9 @@ def upload_file():
     file.save("static/test.jpg")
     return "Saved successfully"
 
-
 @application.route('/smart-lot/lots', methods=['GET'])
 def get_tasks():
     return jsonify({'lots': lots})
-
 
 @application.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
 def get_lot(lot_name):
@@ -64,7 +60,6 @@ def get_lot(lot_name):
     response = jsonify(rows)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
-
 
 @application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
 def get_lots_by_location(lat_long):
@@ -84,10 +79,8 @@ def get_lots_by_location(lat_long):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 @application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
@@ -107,14 +100,15 @@ def receive_image(lot_id, key):
             img = img.rotate(5)
             img.save(UPLOAD_FOLDER / filename)
 
-            row = {}
+            spots = {}
+            payload = {}
             spot_id = 0
             row1_spot_len = 85
             for i in range(320, 700, row1_spot_len):
                 spot_id += 1
-                row[spot_id] = img.crop((i, 440, i+row1_spot_len, 540))
-            for i in row:
-                cont = ImageEnhance.Contrast(row[i]).enhance(3.0)
+                spots[spot_id] = img.crop((i, 440, i+row1_spot_len, 540))
+            for i in spots:
+                cont = ImageEnhance.Contrast(spots[i]).enhance(3.0)
                 bright = ImageEnhance.Brightness(cont).enhance(1.0)
                 sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
                 sharp.save('../image-processing-server/tmp', format='PNG')
@@ -124,18 +118,19 @@ def receive_image(lot_id, key):
                 output = proc.communicate()[0]
                 if output.decode('utf-8').strip() == 'SUCCESS':
                     row_changed = db.session.query(Spots).filter_by(
-                        spot_number=i).update(dict(availability=False))
+                        spot_number=i, lot_id=lot_id).update(dict(availability=False))
                     db.session.commit()
-                    print('Spot {} availability updated to {}'.format(i, True))
+                    payload[i]=False
+                    print('Spot {} availability updated to {}.'.format(i, False))
                 else:
                     row_changed = db.session.query(Spots).filter_by(
-                        spot_number=i).update(dict(availability=True))
+                        spot_number=i, lot_id=lot_id).update(dict(availability=True))
                     db.session.commit()
-                    print('Spot {} availability updated to {}'.format(i, True))
-            return "File uploaded successfully", 200
+                    payload[i]=True
+                    print('Spot {} availability updated to {}.'.format(i, True))
+            return jsonify(payload), 200
     else:
         return "ERROR: Invalid key.", 405
-
 
 def get_all_rows(table_name):
     rows = db.session.query(table_name).all()
@@ -144,13 +139,11 @@ def get_all_rows(table_name):
 # flag should be 0 or 1
 # 1 being true, 0 being false
 
-
 @application.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
 def flag_bit(lot_id=None, api_flag=None):
     updated_spots = simulate_activity('lot_id', 1)
     return ''.join(['spot:{}\navailability:{}\n'.format(
         i.spot_number, i.availability) for i in updated_spots])
-
 
 def simulate_activity(lot, flag):
     if flag:
@@ -170,7 +163,6 @@ def simulate_activity(lot, flag):
     else:
         return "stopped"
 
-
 @application.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
@@ -188,7 +180,6 @@ def not_found(error):
 #     }
 #     tasks.append(lot)
 #     return jsonify({'lot': lot}), 201
-
 
 if __name__ == '__main__':
     application.run()
