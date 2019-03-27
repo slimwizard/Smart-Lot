@@ -46,7 +46,7 @@ class Lots(Base):
     latitude = Column(Numeric(10, 6))
     longitude = Column(Numeric(10, 6))
     campus_id = Column(ForeignKey('Campuses.campus_id'))
-    lot_number = Column(Numeric)
+    lot_number = Column(Integer)
 
     Campuses = relationship('Campuses')
 

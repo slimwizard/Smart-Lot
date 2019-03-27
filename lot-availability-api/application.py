@@ -48,14 +48,13 @@ def upload_file():
 def get_tasks():
     return jsonify({'lots': lots})
 
-@application.route('/smart-lot/lots/<string:lot_name>', methods=['GET'])
-def get_lot(lot_name):
-    print(lot_name)
-    lot_info = db.session.query(eval(lot_name)).all()
+@application.route('/smart-lot/lots/<id>', methods=['GET'])
+def get_lot(id):
+    lot_info = db.session.query(Spots).filter_by(lot_id=id)
     rows = []
     for row in lot_info:
         rows.append(row.as_dict())
-    if len(lot_info) == 0:
+    if len(rows) == 0:
         abort(404)
     response = jsonify(rows)
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -147,25 +146,22 @@ def get_all_rows(table_name):
 # flag should be 0 or 1
 # 1 being true, 0 being false
 
-@application.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
-def flag_bit(lot_id=None, api_flag=None):
-    updated_spots = simulate_activity('lot_id', 1)
-    return ''.join(['spot:{}\navailability:{}\n'.format(
-        i.spot_number, i.availability) for i in updated_spots])
+@application.route('/smart-lot/test/<string:lot_id>/<int:api_flag>', methods=['GET'])
+def flag_bit(lot_id, api_flag):
+    updated_spots = simulate_activity(lot_id, 1)
+    return ''.join(['spot:{}\noccupied:{}\n'.format(
+        i.spot_number, i.occupied) for i in updated_spots])
 
 def simulate_activity(lot, flag):
     if flag:
-        spots = db.session.query(Spots).all()
+        spots = db.session.query(Spots).filter_by(lot_id=lot).all()
         for i in sample(range(1, len(spots)), 3):
-            temp_spot = db.session.query(
-                Spots).filter_by(spot_number=i).first()
-            if temp_spot.spot_number == i and temp_spot.availability == True:
-                row_changed = db.session.query(Spots).filter_by(
-                    spot_number=i).update(dict(availability=False))
+            temp_spot = db.session.query(Spots).filter_by(spot_number=i).first()
+            if temp_spot.spot_number == i and temp_spot.occupied == True:
+                row_changed = db.session.query(Spots).filter_by(spot_number=i).update(dict(occupied=False))
                 db.session.commit()
-            elif temp_spot.spot_number == i and temp_spot.availability == False:
-                row_changed = db.session.query(Spots).filter_by(
-                    spot_number=i).update(dict(availability=True))
+            elif temp_spot.spot_number == i and temp_spot.occupied == False:
+                row_changed = db.session.query(Spots).filter_by(spot_number=i).update(dict(occupied=True))
                 db.session.commit()
         return spots
     else:
