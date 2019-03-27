@@ -146,9 +146,9 @@ def get_all_rows(table_name):
 # flag should be 0 or 1
 # 1 being true, 0 being false
 
-@application.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
-def flag_bit(lot_id=None, api_flag=None):
-    updated_spots = simulate_activity('lot_id', 1)
+@application.route('/smart-lot/test/<string:lot_id>/<int:api_flag>', methods=['GET'])
+def flag_bit(lot_id, api_flag):
+    updated_spots = simulate_activity(lot_id, 1)
     return ''.join(['spot:{}\noccupied:{}\n'.format(
         i.spot_number, i.occupied) for i in updated_spots])
 
