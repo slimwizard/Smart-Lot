@@ -12,8 +12,8 @@ import application
 from models import *
 
 class TestSimulateActivity(unittest.TestCase):
-    test_occ = [i.availability for i in application.simulate_activity('a19f71fc-4d20-4790-9e38-31df6a02ac76', 1)]
-    occ = [i.availability for i in application.get_all_rows(Spots)]
+    test_occ = [i.occupied for i in application.simulate_activity('a19f71fc-4d20-4790-9e38-31df6a02ac76', 1)]
+    occ = [i.occupied for i in application.get_all_rows(Spots)]
 
     @unittest.expectedFailure
     def test_random(self):

@@ -24,7 +24,7 @@ class Spots(Base):
     latitude = Column(Numeric(10, 6))
     longitude = Column(Numeric(10, 6))
     parking_type = Column(ForeignKey('parking.type_id'))
-    availability = Column(Boolean)
+    occupied = Column(Boolean)
     lot_id = Column(ForeignKey('lots.lot_id'))
 
     parking = relationship('Parking')
