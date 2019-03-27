@@ -25,6 +25,7 @@ export class NethkenAComponent implements OnInit {
   constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService) { }
   occupiedSpots
   weatherError: boolean
+  NethkenA_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
 
   isLoading: boolean = true 
   color = 'primary'
@@ -48,7 +49,7 @@ export class NethkenAComponent implements OnInit {
 
   // finds all spots where occupied is true and adds the spot numbers to occupied spots list
   getLotAvailibility(): void {
-    this.lotAvailibilityService.getLotData("NethkenA").subscribe(data => {
+    this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
       this.isLoading = true;
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates

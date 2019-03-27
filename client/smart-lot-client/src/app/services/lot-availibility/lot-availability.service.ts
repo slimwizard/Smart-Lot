@@ -7,13 +7,13 @@ import { Observable } from 'rxjs';
 })
 export class LotAvailabilityService {
 
-  api_url: string = 'http://3.81.138.55/smart-lot/lots/'
+  api_url: string = 'https://api.smart-lot.io/smart-lot/lots/'
   api_url_dev: string = 'http://127.0.0.1:5000/smart-lot/lots/'
   
   constructor(private http: HttpClient) { }
 
-  getLotData(lot: string): Observable<ParkingSpot[]> {
-    let url = this.api_url_dev + lot
+  getLotData(lotID: string): Observable<ParkingSpot[]> {
+    let url = this.api_url_dev + lotID
     return this.http.get<ParkingSpot[]>(url)
   }
 
