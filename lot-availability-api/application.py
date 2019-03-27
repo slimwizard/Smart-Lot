@@ -1,12 +1,21 @@
 #!python
-from flask import Flask, jsonify, make_response, request, send_from_directory
+from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for
+from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from time import sleep
 from random import sample
 from sqlalchemy.dialects.postgresql import UUID
 from models import *
 import geopy.distance
+from PIL import Image, ImageEnhance
 import os
+import subprocess
+from pathlib import Path
+import numpy as np
+
+UPLOAD_FOLDER = Path("../images/")
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
 POSTGRES = {
     'user': os.environ['DB_USER'],
@@ -19,9 +28,9 @@ POSTGRES = {
 application = Flask(__name__)
 
 application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 
 db = SQLAlchemy(application)
-
 
 @application.route('/')
 def index():
@@ -69,32 +78,94 @@ def get_lots_by_location(lat_long):
     response = jsonify(lots)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
-    
-def get_all_rows():
-    rows = db.session.query(NethkenA).all()
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def split_image(img):
+    spots = {}
+    spot_id = 0
+    spot_lengths = [85]
+    # row 1 cropping
+    for i in range(320, 700, spot_lengths[0]):
+        spot_id += 1
+        spots[spot_id] = img.crop((i, 440, i+spot_lengths[0], 540))
+    return spots
+
+def preprocess_image(img):
+    cont = ImageEnhance.Contrast(img).enhance(3.0)
+    bright = ImageEnhance.Brightness(cont).enhance(1.0)
+    sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
+    sharp.save('../image-processing-server/tmp', format='PNG')
+
+def update_db_upon_rec(spot_num, lot_id, occ):
+    row_changed = db.session.query(Spots).filter_by(spot_number=spot_num,
+            lot_id=lot_id).update(dict(occupied=occ))
+    db.session.commit()
+    print('Spot {} occupied updated to {}.'.format(spot_num, occ))
+
+@application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
+def receive_image(lot_id, key):
+    if key == "shoop":
+        if 'file' not in request.files:
+            return "ERROR: File upload failed. No file in payload."
+        file = request.files['file']
+
+        if file.filename == '':
+            return "ERROR: File upload failed. File has no filename."
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(
+                application.config['UPLOAD_FOLDER'], filename))
+            img = Image.open(UPLOAD_FOLDER / filename)
+            img = img.rotate(5)
+            img.save(UPLOAD_FOLDER / filename)
+
+            spots = split_image(img)
+            payload = {}
+            for i in spots:
+                preprocess_image(spots[i])
+                proc = subprocess.Popen(('python3',
+                                         '../image-processing-server/detection.py',
+                                         'tmp'), stdout=subprocess.PIPE)
+                output = proc.communicate()[0]
+                if output.decode('utf-8').strip() == 'SUCCESS':
+                    update_db_upon_rec(i, lot_id, True)
+                    payload[i]=True
+                else:
+                    update_db_upon_rec(i, lot_id, False)
+                    payload[i]=False
+            return jsonify(payload), 200
+    else:
+        return "ERROR: Invalid key.", 405
+
+def get_all_rows(table_name):
+    rows = db.session.query(table_name).all()
     return rows
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
-@application.route('/smart-lot/test/<int:api_flag>', methods=['GET'])
-def flag_bit(api_flag):
-    spots = simulate_activity(api_flag)
-    return ''.join(['spot: {}\noccupied:{}\n'.format(
-        i.spot_number, i.occupied) for i in spots])
 
-def simulate_activity(flag):
+@application.route('/smart-lot/test/flag_bit/<lot_id>/<api_flag>', methods=['GET'])
+def flag_bit(lot_id=None, api_flag=None):
+    updated_spots = simulate_activity('lot_id', 1)
+    return ''.join(['spot:{}\navailability:{}\n'.format(
+        i.spot_number, i.availability) for i in updated_spots])
+
+def simulate_activity(lot, flag):
     if flag:
-        spots = db.session.query(NethkenA).all()
+        spots = db.session.query(Spots).all()
         for i in sample(range(1, len(spots)), 3):
             temp_spot = db.session.query(
-                NethkenA).filter_by(spot_number=i).first()
-            if temp_spot.spot_number == i and temp_spot.occupied == True:
-                row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=False))
+                Spots).filter_by(spot_number=i).first()
+            if temp_spot.spot_number == i and temp_spot.availability == True:
+                row_changed = db.session.query(Spots).filter_by(
+                    spot_number=i).update(dict(availability=False))
                 db.session.commit()
-            elif temp_spot.spot_number == i and temp_spot.occupied == False:
-                row_changed = db.session.query(NethkenA).filter_by(
-                    spot_number=i).update(dict(occupied=True))
+            elif temp_spot.spot_number == i and temp_spot.availability == False:
+                row_changed = db.session.query(Spots).filter_by(
+                    spot_number=i).update(dict(availability=True))
                 db.session.commit()
         return spots
     else:
