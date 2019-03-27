@@ -82,6 +82,22 @@ def get_lots_by_location(lat_long):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def image_split(img):
+    spots = {}
+    spot_id = 0
+    spot_lengths = [85]
+    # row 1 cropping
+    for i in range(320, 700, spot_lengths[0]):
+        spot_id += 1
+        spots[spot_id] = img.crop((i, 440, i+spot_lengths[0], 540))
+    return spots
+
+def image_process(img):
+    cont = ImageEnhance.Contrast(img).enhance(3.0)
+    bright = ImageEnhance.Brightness(cont).enhance(1.0)
+    sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
+    sharp.save('../image-processing-server/tmp', format='PNG')
+
 @application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
     if key == "shoop":
@@ -100,18 +116,10 @@ def receive_image(lot_id, key):
             img = img.rotate(5)
             img.save(UPLOAD_FOLDER / filename)
 
-            spots = {}
+            spots = image_split(img)
             payload = {}
-            spot_id = 0
-            row1_spot_len = 85
-            for i in range(320, 700, row1_spot_len):
-                spot_id += 1
-                spots[spot_id] = img.crop((i, 440, i+row1_spot_len, 540))
             for i in spots:
-                cont = ImageEnhance.Contrast(spots[i]).enhance(3.0)
-                bright = ImageEnhance.Brightness(cont).enhance(1.0)
-                sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
-                sharp.save('../image-processing-server/tmp', format='PNG')
+                image_process(spots[i])
                 proc = subprocess.Popen(('python3',
                                          '../image-processing-server/detection.py',
                                          'tmp'), stdout=subprocess.PIPE)
