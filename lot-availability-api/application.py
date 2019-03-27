@@ -83,8 +83,8 @@ def flag_bit(lot_id=None, api_flag=None):
 
 def simulate_activity(lot, flag):
     if flag:
-        spots = db.session.query(Spots).filter_by(lot_id=lot)
-        for i in sample(range(1, len(spots), 3)):
+        spots = db.session.query(Spots).filter_by(lot_id=lot).all()
+        for i in sample(range(1, len(spots)), 3):
             temp_spot = db.session.query(Spots).filter_by(spot_number=i).first()
             if temp_spot.spot_number == i and temp_spot.occupied == True:
                 row_changed = db.session.query(Spots).filter_by(spot_number=i).update(dict(occupied=False))
