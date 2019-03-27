@@ -82,7 +82,7 @@ def get_lots_by_location(lat_long):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def image_split(img):
+def split_image(img):
     spots = {}
     spot_id = 0
     spot_lengths = [85]
@@ -92,11 +92,17 @@ def image_split(img):
         spots[spot_id] = img.crop((i, 440, i+spot_lengths[0], 540))
     return spots
 
-def image_process(img):
+def preprocess_image(img):
     cont = ImageEnhance.Contrast(img).enhance(3.0)
     bright = ImageEnhance.Brightness(cont).enhance(1.0)
     sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
     sharp.save('../image-processing-server/tmp', format='PNG')
+
+def update_db_upon_rec(spot_num, lot_id, occ):
+    row_changed = db.session.query(Spots).filter_by(spot_number=spot_num,
+            lot_id=lot_id).update(dict(occupied=occ))
+    db.session.commit()
+    print('Spot {} occupied updated to {}.'.format(spot_num, occ))
 
 @application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
@@ -116,26 +122,20 @@ def receive_image(lot_id, key):
             img = img.rotate(5)
             img.save(UPLOAD_FOLDER / filename)
 
-            spots = image_split(img)
+            spots = split_image(img)
             payload = {}
             for i in spots:
-                image_process(spots[i])
+                preprocess_image(spots[i])
                 proc = subprocess.Popen(('python3',
                                          '../image-processing-server/detection.py',
                                          'tmp'), stdout=subprocess.PIPE)
                 output = proc.communicate()[0]
                 if output.decode('utf-8').strip() == 'SUCCESS':
-                    row_changed = db.session.query(Spots).filter_by(
-                        spot_number=i, lot_id=lot_id).update(dict(availability=False))
-                    db.session.commit()
-                    payload[i]=False
-                    print('Spot {} availability updated to {}.'.format(i, False))
-                else:
-                    row_changed = db.session.query(Spots).filter_by(
-                        spot_number=i, lot_id=lot_id).update(dict(availability=True))
-                    db.session.commit()
+                    update_db_upon_rec(i, lot_id, True)
                     payload[i]=True
-                    print('Spot {} availability updated to {}.'.format(i, True))
+                else:
+                    update_db_upon_rec(i, lot_id, False)
+                    payload[i]=False
             return jsonify(payload), 200
     else:
         return "ERROR: Invalid key.", 405

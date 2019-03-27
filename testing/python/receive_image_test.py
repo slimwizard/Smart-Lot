@@ -15,7 +15,7 @@ from models import *
 
 
 class TestReceiveImage(unittest.TestCase): 
-    occ = [i.availability for i in application.get_all_rows(Spots)[::-1]]
+    occ = [i.occupied for i in application.get_all_rows(Spots)[::-1]]
     output = subprocess.Popen(['curl', '-i', '-X', 'POST',
         '-F', 'file=@{}'.format(os.path.abspath('../resources/test_image.png')),
         'localhost:5000/smart-lot/upload/a19f71fc-4d20-4790-9e38-31df6a02ac76/shoop'],
@@ -29,7 +29,7 @@ class TestReceiveImage(unittest.TestCase):
 
     def test_update(self):
         for i in self.occ_list:
-            self.assertFalse(self.occ_list[i])
+            self.assertTrue(self.occ_list[i])
 
     def test_http_code(self):
         self.assertIn('200', self.http_code)
