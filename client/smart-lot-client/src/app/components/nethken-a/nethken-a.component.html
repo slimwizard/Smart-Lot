@@ -1,13 +1,13 @@
 <div style="text-align: center; margin-top: 30px;">
-        <mat-progress-spinner style="margin:0 auto;" *ngIf="isLoading" [mode]="mode" [value]="value" [diameter]=40>
-        </mat-progress-spinner>
-    </div>
+    <mat-progress-spinner style="margin:0 auto;" *ngIf="isLoading" [mode]="mode" [value]="value" [diameter]=40></mat-progress-spinner>
+</div>
 
 <div class="main-content grid" *ngIf="!isLoading">
     <div style="text-align: center;">
         <mat-card class="card" style="margin-bottom: 10px;">
             <mat-card-header>
                 <mat-card-title class="mat-h2" class="lot-title">Nethken A</mat-card-title>
+                <button (click)="openMap()">Open in Google Maps</button>
                 <mat-card-subtitle class="lotDescription">The parking lot adjacent to the back of Nethken Hall
                 </mat-card-subtitle>
             </mat-card-header>

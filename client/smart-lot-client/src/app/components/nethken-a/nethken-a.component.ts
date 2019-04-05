@@ -42,6 +42,8 @@ export class NethkenAComponent implements OnInit {
     "Drizzle" : false,
     "Thunderstorm" : false
   }
+  lat = "32.5251941"
+  lon = "-92.6471654"
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
@@ -68,6 +70,10 @@ export class NethkenAComponent implements OnInit {
       this.weatherError = true
       setTimeout(() => {this.isLoading=false}, 1000)
     })
+  }
+
+  openMap(): void {
+    window.open(`https://maps.google.com/?q=${this.lat},${this.lon}`)
   }
 
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
