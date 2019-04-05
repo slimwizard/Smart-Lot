@@ -13,7 +13,6 @@ import {
   state
 } from '@angular/animations';
 
-
 @Component({
   selector: 'app-nethken-a',
   templateUrl: './nethken-a.component.html',
@@ -42,8 +41,6 @@ export class NethkenAComponent implements OnInit {
     "Drizzle" : false,
     "Thunderstorm" : false
   }
-  lat = "32.5251941"
-  lon = "-92.6471654"
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
@@ -72,11 +69,17 @@ export class NethkenAComponent implements OnInit {
     })
   }
 
-  openMap(): void {
-    window.open(`https://maps.google.com/?q=${this.lat},${this.lon}`)
-  }
-
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
+
+  openMap(): void {
+    this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
+      this.isLoading = true;
+      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
+      // use first parking spot location for weather coordinates
+      this.getLotWeather(data[0].latitude, data[0].longitude)
+    }, error => console.log(error))
+    window.open(`https://maps.google.com/?q=${this.parkingLot.latitude},${this.parkingLot.longitude}`)
+  }
 
   ngOnInit() {
     this.getLotAvailibility()
