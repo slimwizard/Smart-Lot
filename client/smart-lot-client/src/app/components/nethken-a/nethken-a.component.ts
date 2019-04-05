@@ -73,12 +73,8 @@ export class NethkenAComponent implements OnInit {
 
   openMap(): void {
     this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
-      this.isLoading = true;
-      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
-      // use first parking spot location for weather coordinates
-      this.getLotWeather(data[0].latitude, data[0].longitude)
+    window.open(`https://maps.google.com/?q=${data[0].latitude},${data[0].longitude}`)
     }, error => console.log(error))
-    window.open(`https://maps.google.com/?q=${this.parkingLot.latitude},${this.parkingLot.longitude}`)
   }
 
   ngOnInit() {
