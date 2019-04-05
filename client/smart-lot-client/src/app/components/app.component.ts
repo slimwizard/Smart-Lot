@@ -61,12 +61,14 @@ export class AppComponent {
       document.body.style.backgroundColor = "#2d2d2d"
       document.body.style.color = "#edf3ff"
       document.body.className = 'night-mode'
+      document.getElementsByClassName('icon').setAttribute("style","color:white");
 
     }
     else {
       document.body.style.backgroundColor = "white"
       document.body.style.color = "black"
       document.body.className = ''
+      document.getElementsByClassName('icon').setAttribute("style","color:black");
     }
   }
 }
