@@ -73,7 +73,7 @@ export class NethkenAComponent implements OnInit {
 
   openMap(): void {
     this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
-    window.open(`https://maps.google.com/?q=${data[0].latitude},${data[0].longitude}`)
+      window.open(`https://maps.google.com/?q=${data[0].latitude},${data[0].longitude}`)
     }, error => console.log(error))
   }
 
