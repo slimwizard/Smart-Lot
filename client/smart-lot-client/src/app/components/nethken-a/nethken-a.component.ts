@@ -41,6 +41,8 @@ export class NethkenAComponent implements OnInit {
     "Drizzle" : false,
     "Thunderstorm" : false
   }
+  latitude: number
+  longitude: number
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
@@ -50,9 +52,11 @@ export class NethkenAComponent implements OnInit {
   getLotAvailibility(): void {
     this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
       this.isLoading = true;
+      this.latitude = data[0].latitude;
+      this.longitude = data[0].longitude
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates
-      this.getLotWeather(data[0].latitude, data[0].longitude)
+      this.getLotWeather(this.latitude, this.longitude)
     }, error => console.log(error))
   }
 
@@ -72,9 +76,7 @@ export class NethkenAComponent implements OnInit {
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
 
   openMap(): void {
-    this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
-      window.open(`https://maps.google.com/?q=${data[0].latitude},${data[0].longitude}`)
-    }, error => console.log(error))
+    window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
   }
 
   ngOnInit() {
