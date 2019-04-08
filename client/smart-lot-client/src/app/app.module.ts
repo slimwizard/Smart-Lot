@@ -7,7 +7,7 @@ import { MatExpansionModule, MatCardModule, MatButtonModule, MatListModule, MatP
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './components/home/home.component';
 import { NethkenAComponent } from './components/nethken-a/nethken-a.component';
-import { AboutComponent } from './components/about/about.component'
+import { AboutComponent } from './components/about/about.component';
 
 @NgModule({
   declarations: [

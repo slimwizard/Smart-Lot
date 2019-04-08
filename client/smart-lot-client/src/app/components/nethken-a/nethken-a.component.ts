@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core'
-
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
 import { WeatherService } from '../../services/weather/weather.service'
 import {
