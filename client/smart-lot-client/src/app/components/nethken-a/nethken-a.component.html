@@ -5,11 +5,56 @@
 <div class="main-content grid" *ngIf="!isLoading">
 	<div style="text-align: center;">
 		<mat-card class="card" style="margin-bottom: 10px;">
-			<mat-card-header>
-				<mat-card-title class="mat-h2" class="lot-title">Nethken A</mat-card-title>
-				<mat-card-subtitle class="lotDescription">The parking lot adjacent to the back of Nethken Hall
-				</mat-card-subtitle>
-			</mat-card-header>
+				<mat-card-header>
+						<mat-card-title-group>
+								<mat-card-title class="mat-h2" class="lot-title">Nethken A</mat-card-title>
+								<mat-card-subtitle class="lotDescription">The parking lot adjacent to the back of Nethken Hall
+								</mat-card-subtitle>
+						</mat-card-title-group>
+						<button mat-button class="lot-image-button" (click)="openDialog()">
+								<div id="lot-image-icon" class="lot-image-icon">
+										<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+											 viewBox="0 0 58 58" style="enable-background:new 0 0 58 58;" xml:space="preserve">
+												<rect x="1" y="7" style="fill:#C3E1ED;stroke:#E7ECED;stroke-width:2;stroke-miterlimit:10;" width="56" height="44"/>
+												<circle style="fill:#ED8A19;" cx="16" cy="17.569" r="6.569"/>
+												<polygon style="fill:#1A9172;" points="56,36.111 55,35 43,24 32.5,35.5 37.983,40.983 42,45 56,45 "/>
+												<polygon style="fill:#1A9172;" points="2,49 26,49 21.983,44.983 11.017,34.017 2,41.956 "/>
+												<rect x="2" y="45" style="fill:#6B5B4B;" width="54" height="5"/>
+												<polygon style="fill:#25AE88;" points="37.983,40.983 27.017,30.017 10,45 42,45 "/>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+												<g>
+												</g>
+										</svg>
+									</div>
+						</button>
+					</mat-card-header>
 			<mat-card-content *ngIf="!weatherError" class="weather-grid">
 				<div id="storm-icon" class="weather-icon" *ngIf="weatherResponses['Thunderstorm']"  matTooltip="storm" [matTooltipPosition]="'left'">
 					<svg height="511pt" viewBox="0 0 511 511.99995" width="511pt" xmlns="http://www.w3.org/2000/svg">

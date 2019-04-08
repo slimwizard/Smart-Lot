@@ -3,18 +3,20 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
-import { MatExpansionModule, MatCardModule, MatButtonModule, MatListModule, MatProgressSpinnerModule, MatDividerModule, MatTooltipModule } from '@angular/material';
+import { MatExpansionModule, MatCardModule, MatButtonModule, MatListModule, MatProgressSpinnerModule, MatDividerModule, MatTooltipModule, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './components/home/home.component';
 import { NethkenAComponent } from './components/nethken-a/nethken-a.component';
-import { AboutComponent } from './components/about/about.component'
+import { AboutComponent } from './components/about/about.component';
+import { LotModalComponent } from './components/nethken-a/lot-modal/lot-modal.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NethkenAComponent,
-    AboutComponent
+    AboutComponent,
+    LotModalComponent
   ],
   imports: [
     BrowserModule,
@@ -27,9 +29,11 @@ import { AboutComponent } from './components/about/about.component'
     MatProgressSpinnerModule,
     HttpClientModule,
     MatDividerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [LotModalComponent]
 })
 export class AppModule { }
