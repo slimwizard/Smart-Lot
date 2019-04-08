@@ -129,10 +129,6 @@ def receive_image(lot_id, key):
     else:
         return "ERROR: Invalid key.", 405
 
-def get_all_rows(table_name):
-    rows = db.session.query(table_name).all()
-    return rows
-
 # flag should be 0 or 1
 # 1 being true, 0 being false
 

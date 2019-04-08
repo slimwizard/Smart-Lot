@@ -14,8 +14,6 @@ sys.path.append(os.path.abspath(script_path))
 import application
 from models import *
 
-
-
 class TestGetLot(unittest.TestCase):
     output = subprocess.Popen(['curl', '-i', '-X', 'GET', 
         'localhost:5000/smart-lot/lots/a19f71fc-4d20-4790-9e38-31df6a02ac76'],
@@ -35,4 +33,3 @@ class TestGetLot(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

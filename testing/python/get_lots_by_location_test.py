@@ -4,7 +4,7 @@ import sys
 import requests
 import json
 
-class TestSimulateActivity(unittest.TestCase):
+class TestGetLotsByLocation(unittest.TestCase):
     req = requests.get('http://api.smart-lot.io/smart-lot/lots/by_location/32.5232,-92.6379')
 
     lots = json.loads(req.text)
@@ -22,13 +22,5 @@ class TestSimulateActivity(unittest.TestCase):
                 self.assertIn('lot_id', lot)
                 self.assertIn('lot_name', lot)
                 self.assertIn('lot_number', lot)
-
-   # @unittest.expectedFailure
-   # def test_random(self):
-   #     self.assertEqual(self.test_occ, self.occ)
-
-   # def test_eq(self):
-   #     self.assertEqual(self.test_occ, self.test_occ)
-
 if __name__ == '__main__':
     unittest.main()                                                    
