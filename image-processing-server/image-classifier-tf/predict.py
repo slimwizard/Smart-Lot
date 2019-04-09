@@ -5,9 +5,10 @@ import sys,argparse
 
 
 # First, pass the path of the image
-dir_path = os.path.dirname(os.path.realpath(__file__))
-image_path=sys.argv[1] 
-filename = dir_path +'/' +image_path
+# dir_path = os.path.dirname(os.path.realpath(__file__))
+# image_path=sys.argv[1] 
+# filename = dir_path +'/' +image_path
+filename = sys.argv[1]
 image_size=250
 num_channels=3
 images = []
@@ -46,4 +47,7 @@ y_test_images = np.zeros((1, len(os.listdir('training-data'))))
 feed_dict_testing = {x: x_batch, y_true: y_test_images}
 result=sess.run(y_pred, feed_dict=feed_dict_testing)
 # result is of this format [prob_of_occupied prob_of_unoccupied]
-print(result)
+print(f'confidence in occupied spot:{result[0][0]}')
+print(f'confidence in unoccupied spot:{result[0][1]}')
+if result[0][0] > result[0][1]: print('\nprediction: occupied')
+else: print('\nprediction: unoccupied')
