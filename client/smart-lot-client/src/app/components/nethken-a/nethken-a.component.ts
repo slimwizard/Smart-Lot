@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
-
+import { LotModalComponent } from './lot-modal/lot-modal.component'
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
+import { MatDialog } from '@angular/material'
 import { WeatherService } from '../../services/weather/weather.service'
 import {
   transition,
@@ -21,7 +22,7 @@ import {
 
 export class NethkenAComponent implements OnInit {
 
-  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService) { }
+  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog) { }
   occupiedSpots
   weatherError: boolean
   NethkenA_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
@@ -77,6 +78,12 @@ export class NethkenAComponent implements OnInit {
 
   openMap(): void {
     window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(LotModalComponent,{
+      width: "600px"
+    })
   }
 
   ngOnInit() {
