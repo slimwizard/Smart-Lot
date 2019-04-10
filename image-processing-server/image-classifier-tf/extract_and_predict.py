@@ -4,7 +4,7 @@ from predict import predict
 import psutil
 
 
-lot_file = '/Users/mrice/Desktop/2019-03-29-05:00PM.jpg'
+lot_file = '/Users/mrice/Desktop/lot.jpg'
 new_spot = '/Users/mrice/Documents/Test_Dev/Smart-Lot/image-processing-server/image-classifier-tf/tmp/tmp.png'
 lot = Image.open(lot_file).rotate(1)
 
@@ -83,4 +83,4 @@ for i in range(row_3_spots):
     if prediction =='occupied': spot.show()
     spot_number+=1
 
-# kill_preview_proc()
+kill_preview_proc()
