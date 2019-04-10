@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-<<<<<<< HEAD
-=======
 import { LotModalComponent } from './lot-modal/lot-modal.component'
->>>>>>> 23b13cf8024acdc6b51480f21c293ec1ac5d4048
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
 import { MatDialog } from '@angular/material'
 import { WeatherService } from '../../services/weather/weather.service'
@@ -80,7 +77,14 @@ export class NethkenAComponent implements OnInit {
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
 
   openMap(): void {
-    window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
+    // window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
+    if /* if we're on iOS, open in Apple Maps */
+    ((navigator.platform.indexOf("iPhone") != -1) || 
+     (navigator.platform.indexOf("iPad") != -1) || 
+     (navigator.platform.indexOf("iPod") != -1))
+    window.open(`maps://maps.google.com/?q=${this.latitude},${this.longitude}`);
+    else /* else use Google */
+    window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`);
   }
 
   openDialog(): void {

@@ -9,6 +9,10 @@
     grid-area: card;
 }
 
+mat-card-title-group {
+    text-align: left;
+}
+
 .weather-icon svg {
     width: 45px;
     height: 45px;
@@ -66,6 +70,10 @@ mat-card {
     margin-top: 5px;
     margin-bottom: 5px
 }
+
+// .lot-image-button {
+//     margin-bottom: 10px;
+// }
 
 @media only screen
 and (max-width : 880px) {
