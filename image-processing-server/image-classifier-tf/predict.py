@@ -53,4 +53,4 @@ def predict(filename):
     if result[0][0] > result[0][1]: return 'occupied'
     else: return 'unoccupied'
 
-# predict(filename)
+# print(predict(filename))
