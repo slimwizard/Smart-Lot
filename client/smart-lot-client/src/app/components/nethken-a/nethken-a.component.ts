@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core'
+<<<<<<< HEAD
+=======
+import { LotModalComponent } from './lot-modal/lot-modal.component'
+>>>>>>> 23b13cf8024acdc6b51480f21c293ec1ac5d4048
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
+import { MatDialog } from '@angular/material'
 import { WeatherService } from '../../services/weather/weather.service'
 import {
   transition,
@@ -12,7 +17,6 @@ import {
   state
 } from '@angular/animations';
 
-
 @Component({
   selector: 'app-nethken-a',
   templateUrl: './nethken-a.component.html',
@@ -21,7 +25,7 @@ import {
 
 export class NethkenAComponent implements OnInit {
 
-  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService) { }
+  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog) { }
   occupiedSpots
   weatherError: boolean
   NethkenA_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
@@ -41,6 +45,8 @@ export class NethkenAComponent implements OnInit {
     "Drizzle" : false,
     "Thunderstorm" : false
   }
+  latitude: number
+  longitude: number
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
@@ -50,9 +56,11 @@ export class NethkenAComponent implements OnInit {
   getLotAvailibility(): void {
     this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
       this.isLoading = true;
+      this.latitude = data[0].latitude;
+      this.longitude = data[0].longitude
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates
-      this.getLotWeather(data[0].latitude, data[0].longitude)
+      this.getLotWeather(this.latitude, this.longitude)
     }, error => console.log(error))
   }
 
@@ -70,6 +78,16 @@ export class NethkenAComponent implements OnInit {
   }
 
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
+
+  openMap(): void {
+    window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(LotModalComponent,{
+      width: "600px"
+    })
+  }
 
   ngOnInit() {
     this.getLotAvailibility()

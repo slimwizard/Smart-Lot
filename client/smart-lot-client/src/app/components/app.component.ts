@@ -56,17 +56,26 @@ export class AppComponent {
   }
 
   changeVisibility() {
+    var i:number; 
+
     this.nightMode = !this.nightMode;
     if (this.nightMode === true) {
       document.body.style.backgroundColor = "#2d2d2d"
       document.body.style.color = "#edf3ff"
       document.body.className = 'night-mode'
+      for (i=0; i<document.getElementsByClassName('icon').length; i++) {
+        document.getElementsByClassName('icon')[i].setAttribute("style","fill:white")
+      }
+      
 
     }
     else {
       document.body.style.backgroundColor = "white"
       document.body.style.color = "black"
       document.body.className = ''
+      for (i=0; i<document.getElementsByClassName('icon').length; i++) {
+        document.getElementsByClassName('icon')[i].setAttribute("style","fill:black")
+      }
     }
   }
 }
