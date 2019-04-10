@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core'
+<<<<<<< HEAD
+=======
 import { LotModalComponent } from './lot-modal/lot-modal.component'
+>>>>>>> 23b13cf8024acdc6b51480f21c293ec1ac5d4048
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
 import { MatDialog } from '@angular/material'
 import { WeatherService } from '../../services/weather/weather.service'

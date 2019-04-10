@@ -8,7 +8,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './components/home/home.component';
 import { NethkenAComponent } from './components/nethken-a/nethken-a.component';
 import { AboutComponent } from './components/about/about.component';
+<<<<<<< HEAD
+=======
 import { LotModalComponent } from './components/nethken-a/lot-modal/lot-modal.component'
+>>>>>>> 23b13cf8024acdc6b51480f21c293ec1ac5d4048
 
 @NgModule({
   declarations: [
