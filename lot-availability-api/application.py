@@ -32,22 +32,12 @@ application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 
 db = SQLAlchemy(application)
 
+# index endpoint for smoke testing
 @application.route('/')
 def index():
     return "Hewwo wowwd"
 
-@application.route('/smart-lot/lots/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        return "No file"
-    file = request.files['file']
-    file.save("static/test.jpg")
-    return "Saved successfully"
-
-@application.route('/smart-lot/lots', methods=['GET'])
-def get_tasks():
-    return jsonify({'lots': lots})
-
+# gets all spots in a lot by id
 @application.route('/smart-lot/lots/<id>', methods=['GET'])
 def get_lot(id):
     lot_info = db.session.query(Spots).filter_by(lot_id=id)
@@ -58,7 +48,7 @@ def get_lot(id):
         abort(404)
     response = jsonify(rows)
     response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    return response, 200
 
 @application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
 def get_lots_by_location(lat_long):
@@ -138,10 +128,6 @@ def receive_image(lot_id, key):
             return jsonify(payload), 200
     else:
         return "ERROR: Invalid key.", 405
-
-def get_all_rows(table_name):
-    rows = db.session.query(table_name).all()
-    return rows
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
