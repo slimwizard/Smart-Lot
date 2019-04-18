@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core'
-import { LotModalComponent } from './lot-modal/lot-modal.component'
-import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
-import { MatDialog } from '@angular/material'
-import { WeatherService } from '../../services/weather/weather.service'
+import { Component, OnInit } from '@angular/core';
+import { LotModalComponent } from './lot-modal/lot-modal.component';
+import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service';
+import { MatDialog } from '@angular/material';
+import { WeatherService } from '../../services/weather/weather.service';
+import { interval } from 'rxjs';
 import {
   transition,
   trigger,
@@ -27,7 +28,7 @@ export class NethkenAComponent implements OnInit {
   weatherError: boolean
   NethkenA_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
 
-  isLoading: boolean = true 
+  isLoading = true;
   color = 'primary'
   mode = 'indeterminate'
   value = 50
@@ -35,12 +36,12 @@ export class NethkenAComponent implements OnInit {
   currentTemp: string
   isNight: boolean
   weatherResponses = {
-    "Clear" : false, 
-    "Clouds": false,
-    "Snow" : false,
-    "Rain" : false,
-    "Drizzle" : false,
-    "Thunderstorm" : false
+    'Clear' : false,
+    'Clouds': false,
+    'Snow' : false,
+    'Rain' : false,
+    'Drizzle' : false,
+    'Thunderstorm' : false
   }
   latitude: number
   longitude: number
@@ -49,17 +50,24 @@ export class NethkenAComponent implements OnInit {
     return this.occupiedSpots.indexOf(spotNumber) != -1
   }
 
-  // finds all spots where occupied is true and adds the spot numbers to occupied spots list
+	// finds all spots where occupied is true and adds the spot numbers to occupied spots list
   getLotAvailibility(): void {
     this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
       this.isLoading = true;
       this.latitude = data[0].latitude;
-      this.longitude = data[0].longitude
-      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
+      this.longitude = data[0].longitude;
+      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number);
       // use first parking spot location for weather coordinates
-      this.getLotWeather(this.latitude, this.longitude)
-    }, error => console.log(error))
+      this.getLotWeather(this.latitude, this.longitude);
+    }, error => console.log(error));
   }
+
+  updateLotAvailibility(): void {
+    this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
+      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number);
+    }, error => console.log(error));
+  }
+
 
   getLotWeather(lat, lon): void {
     this.weatherService.getWeather(String(lat), String(lon)).subscribe(data => {
@@ -79,22 +87,25 @@ export class NethkenAComponent implements OnInit {
   openMap(): void {
     // window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
     if /* if we're on iOS, open in Apple Maps */
-    ((navigator.platform.indexOf("iPhone") != -1) || 
-     (navigator.platform.indexOf("iPad") != -1) || 
-     (navigator.platform.indexOf("iPod") != -1))
+    ((navigator.platform.indexOf('iPhone') != -1) || 
+     (navigator.platform.indexOf('iPad') != -1) || 
+     (navigator.platform.indexOf('iPod') != -1))
     window.open(`maps://maps.google.com/?q=${this.latitude},${this.longitude}`);
     else /* else use Google */
     window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`);
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(LotModalComponent,{
-      width: "600px"
-    })
+    const dialogRef = this.dialog.open(LotModalComponent, {
+      width: '600px'
+    });
   }
 
   ngOnInit() {
-    this.getLotAvailibility()
+	  this.getLotAvailibility();
+	  interval(5000).subscribe( x => {
+		  this.updateLotAvailibility();
+	  });
   }
 }
 
