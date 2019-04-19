@@ -27,7 +27,7 @@ def predict(filename):
     ## Let us restore the saved model 
     sess = tf.Session()
     # Step-1: Recreate the network graph. At this step only graph is created.
-    saver = tf.train.import_meta_graph('unoccupied-occupied-model.meta')
+    saver = tf.train.import_meta_graph('./prediction-model/unoccupied-occupied-model.meta')
     # Step-2: Now let's load the weights saved using the restore method.
     saver.restore(sess, tf.train.latest_checkpoint('./'))
 
