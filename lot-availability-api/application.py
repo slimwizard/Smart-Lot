@@ -12,7 +12,7 @@ import os
 import subprocess
 from pathlib import Path
 import numpy as np
-import extract_and_predict from extract_and_predict
+from extract_and_predict import extract_and_predict
 
 UPLOAD_FOLDER = Path("../images/")
 
