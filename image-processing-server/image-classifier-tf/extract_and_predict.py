@@ -4,9 +4,9 @@ from predict import predict
 import psutil
 
 
-lot_file = '/Users/mrice/Desktop/lot.jpg'
+lot_file = '/Users/mrice/Desktop/new_new/lot_images/lot3.png'
 new_spot = '/Users/mrice/Documents/Test_Dev/Smart-Lot/image-processing-server/image-classifier-tf/tmp/tmp.png'
-lot = Image.open(lot_file).rotate(1)
+lot = Image.open(lot_file).rotate(-3)
 
 spot_number = 1
 
@@ -34,7 +34,7 @@ for i in range(row_1_spots):
     spot.save(new_spot)
     prediction = predict(new_spot)
     print(f'spot {spot_number}: {prediction}')
-    if prediction == 'occupied': spot.show()
+    if prediction == 'unoccupied': spot.show()
     spot_number+=1
 print("\n")
 
@@ -57,7 +57,7 @@ for i in range(row_2_spots):
     spot.save(new_spot)
     prediction = predict(new_spot)
     print(f'spot {spot_number}: {prediction}')
-    if prediction =='occupied': spot.show()
+    if prediction =='unoccupied': spot.show()
     spot_number+=1
 print("\n")
     
@@ -81,7 +81,7 @@ for i in range(row_3_spots):
     spot.save(new_spot)
     prediction = predict(new_spot)
     print(f'spot {spot_number}: {prediction}')
-    if prediction =='occupied': spot.show()
+    if prediction =='unoccupied': spot.show()
     spot_number+=1
 
-kill_preview_proc()
+# kill_preview_proc()
