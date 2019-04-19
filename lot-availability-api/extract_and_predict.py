@@ -1,15 +1,11 @@
 from PIL import Image
-import os
 from predict import predict
-import psutil
-
 
 results = []
 spot_number = 1
 new_spot = '/tmp/tmp.png'
 
-
-def extract_and_prediction(lot_file):
+def extract_and_predict(lot_file):
     lot = Image.open(lot_file).rotate(-3)
     # ROW 1 CROPPING 
     crop_w = 200
