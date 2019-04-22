@@ -8,8 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './components/home/home.component';
 import { NethkenAComponent } from './components/nethken-a/nethken-a.component';
 import { AboutComponent } from './components/about/about.component';
-import { LotModalComponent } from './components/nethken-a/lot-modal/lot-modal.component';
-import { LotComponent } from './src/app/components/lot/lot.component'
+import { LotModalComponent } from './components/nethken-a/lot-modal/lot-modal.component'
 
 @NgModule({
   declarations: [
@@ -17,8 +16,7 @@ import { LotComponent } from './src/app/components/lot/lot.component'
     HomeComponent,
     NethkenAComponent,
     AboutComponent,
-    LotModalComponent,
-    LotComponent
+    LotModalComponent
   ],
   imports: [
     BrowserModule,
