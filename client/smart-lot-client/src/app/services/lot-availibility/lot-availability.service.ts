@@ -25,6 +25,7 @@ export class LotAvailabilityService {
     return this.http.get<ParkingLot[]>(url)
   }
 
+  //pls hlp: also added this to get info from api
   getLotData(lotID: string): Observable<ParkingLot[]> {
     let url = this.api_url_dev + "lot/" + lotID
     return this.http.get<ParkingLot[]>(url)
