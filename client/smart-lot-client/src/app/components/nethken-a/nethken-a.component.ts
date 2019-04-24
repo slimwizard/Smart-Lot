@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Injectable } from '@angular/core';
 import { LotModalComponent } from './lot-modal/lot-modal.component';
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service';
 import { MatDialog } from '@angular/material';
 import { WeatherService } from '../../services/weather/weather.service';
-import { interval } from 'rxjs';
 import {
   transition,
   trigger,
@@ -14,6 +13,8 @@ import {
   animateChild,
   state
 } from '@angular/animations';
+import * as socketIo from 'socket.io-client';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-nethken-a',
@@ -22,6 +23,8 @@ import {
 })
 
 export class NethkenAComponent implements OnInit {
+
+  sub: Subscription;
 
   constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog) { }
   occupiedSpots
@@ -102,10 +105,7 @@ export class NethkenAComponent implements OnInit {
   }
 
   ngOnInit() {
-	  this.getLotAvailibility();
-	  interval(5000).subscribe( x => {
-		  this.updateLotAvailibility();
-	  });
+    this.getLotAvailibility();
   }
 }
 
