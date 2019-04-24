@@ -24,11 +24,14 @@ export class LotComponent implements OnInit {
   constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog) { }
   occupiedSpots
   weatherError: boolean
-  Lot_UUID: string[] = ['a19f71fc-4d20-4790-9e38-31df6a02ac76']
-  current_UUID: string
-  name: string
-  description: string
 
+  Lot_UUID: string[] = ['a19f71fc-4d20-4790-9e38-31df6a02ac76']
+  current_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
+  name: any
+  description: string
+  lot_number: number
+  latitude: number
+  longitude: number
 
   isLoading: boolean = false  //**RESET TO TRUE
   color = 'primary'
@@ -45,8 +48,6 @@ export class LotComponent implements OnInit {
     "Drizzle" : false,
     "Thunderstorm" : false
   }
-  latitude: number
-  longitude: number
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
@@ -61,6 +62,16 @@ export class LotComponent implements OnInit {
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates
       this.getLotWeather(this.latitude, this.longitude)
+    }, error => console.log(error))
+  }
+
+  // gets all info about a lot
+  getLotInfo(): void {
+    this.lotAvailibilityService.getLotData(this.current_UUID).subscribe(data => {
+      this.name = data[0].lot_name; 
+      this.description = data[0].description; 
+      this.lot_number = data[0].lot_number;
+      console.log(this.name, this.description, this.lot_number)
     }, error => console.log(error))
   }
 
@@ -98,5 +109,7 @@ export class LotComponent implements OnInit {
 
   ngOnInit() {
     this.getLotAvailibility()
+    this.getLotInfo()
+    console.log(this.name, this.description, this.lot_number)
   }
 }
