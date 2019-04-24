@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+// import 'rxjs/add/operator/catch';
+import {LotComponent} from '../../components/lot/lot.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,7 @@ export class LotAvailabilityService {
   
   constructor(private http: HttpClient) { }
 
-  getLotData(lotID: string): Observable<ParkingSpot[]> {
+  getSpotData(lotID: string): Observable<ParkingSpot[]> {
     let url = this.api_url_dev + lotID
     return this.http.get<ParkingSpot[]>(url)
   }
@@ -20,6 +23,11 @@ export class LotAvailabilityService {
   getLotsByLocation(location: string): Observable<ParkingLot[]> {
     let url = this.api_url_dev + "by_location/" + location
     return this.http.get<ParkingLot[]>(url)
+  }
+
+  getLotData(lotID: string): Observable<ParkingSpot[]> {
+    let url = this.api_url_dev + "lot" + lotID
+    return this.http.get<ParkingSpot[]>(url)
   }
 }
 
@@ -30,7 +38,6 @@ export interface ParkingSpot {
   latitude: number
   longitude: number
   occupied: boolean
-
 }
 
 export interface ParkingLot {

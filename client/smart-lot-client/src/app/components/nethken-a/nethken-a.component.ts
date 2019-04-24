@@ -51,7 +51,7 @@ export class NethkenAComponent implements OnInit {
 
   // finds all spots where occupied is true and adds the spot numbers to occupied spots list
   getLotAvailibility(): void {
-    this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
+    this.lotAvailibilityService.getSpotData(this.NethkenA_UUID).subscribe(data => {
       this.isLoading = true;
       this.latitude = data[0].latitude;
       this.longitude = data[0].longitude

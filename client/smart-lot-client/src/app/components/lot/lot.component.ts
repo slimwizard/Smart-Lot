@@ -26,6 +26,9 @@ export class LotComponent implements OnInit {
   weatherError: boolean
   Lot_UUID: string[] = ['a19f71fc-4d20-4790-9e38-31df6a02ac76']
   current_UUID: string
+  name: string
+  description: string
+
 
   isLoading: boolean = false  //**RESET TO TRUE
   color = 'primary'
@@ -51,10 +54,10 @@ export class LotComponent implements OnInit {
 
   // finds all spots where occupied is true and adds the spot numbers to occupied spots list
   getLotAvailibility(): void {
-    this.lotAvailibilityService.getLotData(this.current_UUID).subscribe(data => {
+    this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
       this.isLoading = false; //**RESET TO TRUE
       this.latitude = data[0].latitude;
-      this.longitude = data[0].longitude
+      this.longitude = data[0].longitude;
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates
       this.getLotWeather(this.latitude, this.longitude)

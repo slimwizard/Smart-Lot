@@ -37,10 +37,23 @@ db = SQLAlchemy(application)
 def index():
     return "Hewwo wowwd"
 
-# gets all spots in a lot by id
+# gets all spots in a lot by lot id
 @application.route('/smart-lot/lots/<id>', methods=['GET'])
 def get_lot(id):
     lot_info = db.session.query(Spots).filter_by(lot_id=id)
+    rows = []
+    for row in lot_info:
+        rows.append(row.as_dict())
+    if len(rows) == 0:
+        abort(404)
+    response = jsonify(rows)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response, 200
+
+# gets all lot info by id
+@application.route('/smart-lot/lots/lot/<id>', methods=['GET'])
+def get_lot_info(id):
+    lot_info = db.session.query(Lots).filter_by(lot_id=id)
     rows = []
     for row in lot_info:
         rows.append(row.as_dict())
