@@ -3,6 +3,7 @@ import { LotModalComponent } from './lot-modal/lot-modal.component';
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service';
 import { MatDialog } from '@angular/material';
 import { WeatherService } from '../../services/weather/weather.service';
+import { DataService } from '../../services/data/data.service';
 import {
   transition,
   trigger,
@@ -22,11 +23,15 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./nethken-a.component.scss']
 })
 
-export class NethkenAComponent implements OnInit {
+export class NethkenAComponent implements OnInit, OnDestroy {
 
   sub: Subscription;
+  lot_data: any;
 
-  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog) { }
+  constructor(private lotAvailibilityService: LotAvailabilityService,
+	private weatherService: WeatherService,
+	private dataService: DataService,
+	public dialog: MatDialog) { }
   occupiedSpots
   weatherError: boolean
   NethkenA_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
@@ -105,7 +110,14 @@ export class NethkenAComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getLotAvailibility();
+	this.getLotAvailibility();
+	this.sub = this.dataService.getData().subscribe(data => {
+	  this.lot_data = data;
+	});
+  }
+  
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
 
