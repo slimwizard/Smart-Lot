@@ -71,9 +71,11 @@ export class LotComponent implements OnInit {
       this.name = data[0].lot_name; 
       this.description = data[0].description; 
       this.lot_number = data[0].lot_number;
-      console.log(this.name, this.description, this.lot_number)
+      //pls hlp: this console.log has all the correct values but...
+      console.log("getLotInfo: ", this.lot_number, this.name, this.description)
     }, error => console.log(error))
   }
+
 
   getLotWeather(lat, lon): void {
     this.weatherService.getWeather(String(lat), String(lon)).subscribe(data => {
@@ -86,6 +88,8 @@ export class LotComponent implements OnInit {
       this.weatherError = true
       setTimeout(() => {this.isLoading=false}, 1000)
     })
+    console.log("getLotWeather: ", this.lot_number, this.name, this.description)
+
   }
 
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
@@ -110,6 +114,7 @@ export class LotComponent implements OnInit {
   ngOnInit() {
     this.getLotAvailibility()
     this.getLotInfo()
-    console.log(this.name, this.description, this.lot_number)
+    //pls hlp: ...this one is undefined. looks like this is getting run before getLotInfo fsr
+    console.log("ngOnInit: ", this.lot_number, this.name, this.description)
   }
 }
