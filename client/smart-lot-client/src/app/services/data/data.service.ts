@@ -10,11 +10,14 @@ export class DataService {
   socket;
   observer: Observer<any>;
 
-  getData() : Observable<any> {
-	  this.socket = socketIo('http://localhost:5000/smart-lot/socket');
-
-    this.socket.on('broadcast', (res) => {
-      this.observer.next(res.data);
+  getData(lotId: String) : Observable<any> {
+	  this.socket = socketIo('http://localhost:5000/smart-lot/socket/', {query: {lot_id: lotId}});
+	  this.socket.on('connect', () => {
+		  console.log({lot_id: lotId});
+	  });
+	  
+	  this.socket.on('broadcast', (res) => {
+      	this.observer.next(res.data);
     });
 
     return this.createObservable();

@@ -160,14 +160,16 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 @websocket.on('connect', namespace='/smart-lot/socket')
-def on_connect(lot_id):
-    emit('connect', {'lot': lot_id})
+def on_connect():
+    print('client connected')
+    lot_id = request.args.get('lot_id')
+    print(lot_id)
 
 @websocket.on('disconnect', namespace='/smart-lot/socket')
 def on_disconnect():
     print('client disconnected')
 
-@websocket.on('broadcast', namespace='/smart-lot/socket')
+@websocket.on('broadcast', namespace='/smart-lot/socket/')
 def broadcast(lot_id):
     lot_info = db.session.query(Spots).filter_by(lot_id=lot_id)
     rows = []
@@ -194,3 +196,5 @@ def broadcast(lot_id):
 
 if __name__ == '__main__':
     websocket.run(application)
+    global lot_id
+    print('starting')
