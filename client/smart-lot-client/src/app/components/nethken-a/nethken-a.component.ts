@@ -16,7 +16,7 @@ import {
 } from '@angular/animations';
 import * as socketIo from 'socket.io-client';
 import { Subscription } from 'rxjs/Subscription';
-import { map } from 'rxjs/operators';
+import { repeat, map } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax'
 import polling from 'rx-polling';
 
@@ -115,13 +115,13 @@ export class NethkenAComponent implements OnInit, OnDestroy {
   ngOnInit() {
 	this.getLotAvailibility();
 	const request$ = ajax({
-		url: 'http://localhost:5000/smart-lot/lots/' + this.NethkenA_UUID,
+		url: 'http://localhost:5000/smart-lot/lots/polling/' + this.NethkenA_UUID,
 		crossDomain: true
 	}).pipe(
 		map(response => response.response || [])
 	);
 
-	this.sub = polling(request$, {interval: 5000})
+	this.sub = polling(request$, {interval: 5000})	  
 	  .subscribe((lot_data) => {
 		this.occupiedSpots = lot_data.filter(item => item.occupied == true).map(item => item.spot_number);
 	  }, (error) => {

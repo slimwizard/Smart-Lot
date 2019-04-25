@@ -13,6 +13,7 @@ import os
 import subprocess
 from pathlib import Path
 import numpy as np
+import time
 
 UPLOAD_FOLDER = Path("../images/")
 
@@ -30,6 +31,7 @@ application = Flask(__name__)
 
 application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
+application.config['LOT_INFO'] = {}
 
 db = SQLAlchemy(application)
 websocket = SocketIO(application)
@@ -42,15 +44,34 @@ def index():
 # gets all spots in a lot by id
 @application.route('/smart-lot/lots/<id>', methods=['GET'])
 def get_lot(id):
-    lot_info = db.session.query(Spots).filter_by(lot_id=id)
+    application.config['LOT_INFO'] = db.session.query(Spots).filter_by(lot_id=id).all()
     rows = []
-    for row in lot_info:
+    for row in application.config['LOT_INFO']:
         rows.append(row.as_dict())
     if len(rows) == 0:
         abort(404)
     response = jsonify(rows)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response, 200
+
+@application.route('/smart-lot/lots/polling/<id>', methods=['GET'])
+def get_lot_polling(id):
+    while True:
+        updated_lot = db.session.query(Spots).filter_by(lot_id=id).all()
+        updated_rows = []
+        rows = []
+        for row in updated_lot:
+            updated_rows.append(row.as_dict())
+        for row in application.config['LOT_INFO']:
+            rows.append(row.as_dict())
+        if len(rows) == 0 or len(updated_rows) == 0:
+            abort(404)
+        if rows != updated_rows:
+            response = jsonify(updated_rows)
+            application.config['LOT_INFO'] = updated_lot
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 200
+        time.sleep(5)
 
 @application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
 def get_lots_by_location(lat_long):
@@ -196,5 +217,3 @@ def broadcast(lot_id):
 
 if __name__ == '__main__':
     websocket.run(application)
-    global lot_id
-    print('starting')
