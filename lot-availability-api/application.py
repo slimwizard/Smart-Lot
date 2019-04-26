@@ -80,7 +80,6 @@ def update_db_upon_rec(spot_num, lot_id, occ):
 
 @application.route('/api/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
-    print(key)
     if key == "shoop":
         if 'file' not in request.files:
             return "ERROR: File upload failed. No file in payload."
@@ -88,10 +87,9 @@ def receive_image(lot_id, key):
 
         if file.filename == '':
             return "ERROR: File upload failed. File has no filename."
-
+        
         if file and allowed_file(file.filename):
             results = extract_and_predict(file)
-            print(results)
             for i in range(0, len(results)):
                 if results[i]['status'] == "occupied":
                     update_db_upon_rec(i+1, lot_id, True)

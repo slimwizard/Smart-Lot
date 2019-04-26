@@ -9,7 +9,8 @@ def extract_and_predict(lot_file):
     spot_number = 1
     results = []
     new_spot = '/tmp/tmp.png'
-    lot = Image.open(lot_file).rotate(-3)
+    lot = Image.open(lot_file).transpose(Image.ROTATE_270).rotate(-3)
+    lot.show()
     # lot = Image.open(lot_file).rotate(-3)
     # ROW 1 CROPPING 
     crop_w = 200
