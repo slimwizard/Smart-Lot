@@ -78,8 +78,9 @@ def update_db_upon_rec(spot_num, lot_id, occ):
     db.session.commit()
     print('Spot {} occupied updated to {}.'.format(spot_num, occ))
 
-@application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
+@application.route('/api/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
+    print(key)
     if key == "shoop":
         if 'file' not in request.files:
             return "ERROR: File upload failed. No file in payload."
@@ -90,12 +91,13 @@ def receive_image(lot_id, key):
 
         if file and allowed_file(file.filename):
             results = extract_and_predict(file)
+            print(results)
             for i in range(0, len(results)):
-                if i.status == "occupied":
-                    update_db_upon_rec(i, lot_id, True)
+                if results[i]['status'] == "occupied":
+                    update_db_upon_rec(i+1, lot_id, True)
                 else:
-                    update_db_upon_rec(i, lot_id, False)
-            return jsonify(payload), 200
+                    update_db_upon_rec(i+1, lot_id, False)
+            return jsonify({"success": "true"}), 200
     else:
         return "ERROR: Invalid key.", 405
 

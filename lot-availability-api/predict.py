@@ -4,7 +4,7 @@ import os,glob,cv2
 import sys,argparse
 
 # First, pass the path of the image
-# dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path = os.path.dirname(os.path.realpath(__file__))
 # image_path=sys.argv[1] 
 # filename = dir_path +'/' +image_path
 # filename = sys.argv[1]
@@ -29,7 +29,7 @@ def predict(filename):
     # Step-1: Recreate the network graph. At this step only graph is created.
     saver = tf.train.import_meta_graph('./prediction-model/unoccupied-occupied-model.meta')
     # Step-2: Now let's load the weights saved using the restore method.
-    saver.restore(sess, tf.train.latest_checkpoint('./'))
+    saver.restore(sess, tf.train.latest_checkpoint('./prediction-model/'))
 
     # Accessing the default graph which we have restored
     graph = tf.get_default_graph()

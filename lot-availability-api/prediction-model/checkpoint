@@ -1,0 +1,2 @@
+model_checkpoint_path: "unoccupied-occupied-model"
+all_model_checkpoint_paths: "unoccupied-occupied-model"
