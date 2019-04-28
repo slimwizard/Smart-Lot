@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class NethkenAPage {
   navigateTo() {
-    return browser.get('/nethkenA') as Promise<any>;
+    return browser.get('/nethkena') as Promise<any>;
   }
 
   getLotTitleText() {

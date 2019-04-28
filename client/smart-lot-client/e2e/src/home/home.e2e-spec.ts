@@ -27,7 +27,7 @@ describe('running home page tests', () => {
         const nethkenAButton = homePage.getNethkenButton();
         browser.sleep(1000);
         nethkenAButton.click();
-        expect(browser.driver.getCurrentUrl()).toContain('/nethkenA');
+        expect(browser.driver.getCurrentUrl()).toContain('/nethkena');
     });
 
     })
