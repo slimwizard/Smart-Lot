@@ -6,7 +6,6 @@ import { AppComponent } from './components/app.component';
 import { MatExpansionModule, MatCardModule, MatButtonModule, MatListModule, MatProgressSpinnerModule, MatDividerModule, MatTooltipModule, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './components/home/home.component';
-import { NethkenAComponent } from './components/nethken-a/nethken-a.component';
 import { AboutComponent } from './components/about/about.component';
 import { LotModalComponent } from './components/lot/lot-modal/lot-modal.component';
 import { LotComponent } from './components/lot/lot.component'
@@ -15,7 +14,6 @@ import { LotComponent } from './components/lot/lot.component'
   declarations: [
     AppComponent,
     HomeComponent,
-    NethkenAComponent,
     AboutComponent,
     LotModalComponent,
     LotComponent
