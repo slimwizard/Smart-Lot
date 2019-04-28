@@ -3,7 +3,6 @@ import { LotModalComponent } from './lot-modal/lot-modal.component';
 import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service';
 import { MatDialog } from '@angular/material';
 import { WeatherService } from '../../services/weather/weather.service';
-import { DataService } from '../../services/data/data.service';
 import {
   transition,
   trigger,
@@ -33,7 +32,6 @@ export class NethkenAComponent implements OnInit, OnDestroy {
 
   constructor(private lotAvailibilityService: LotAvailabilityService,
 	private weatherService: WeatherService,
-	private dataService: DataService,
 	public dialog: MatDialog) { }
   occupiedSpots
   weatherError: boolean
