@@ -18,7 +18,7 @@ class TestReceiveImage(unittest.TestCase):
     occ = [i.occupied for i in application.get_all_rows(Spots)[::-1]]
     output1 = subprocess.Popen(['curl', '-i', '-X', 'POST',
         '-F', 'file=@{}'.format(os.path.abspath('../resources/api_test2.png')),
-        'localhost:5000/smart-lot/upload/a19f71fc-4d20-4790-9e38-31df6a02ac76/shoop'],
+        'localhost:5000/api/upload/a19f71fc-4d20-4790-9e38-31df6a02ac76/shoop'],
         stdout=subprocess.PIPE)
 
 
@@ -27,7 +27,7 @@ class TestReceiveImage(unittest.TestCase):
     # test for correct response when wrong key is sent
     output2 = subprocess.Popen(['curl', '-i', '-X', 'POST',
         '-F', 'file=@{}'.format(os.path.abspath('../resources/api_test2.png')),
-        'localhost:5000/smart-lot/upload/a19f71fc-4d20-4790-9e38-31df6a02ac76/wrongkey'],
+        'localhost:5000/api/upload/a19f71fc-4d20-4790-9e38-31df6a02ac76/wrongkey'],
         stdout=subprocess.PIPE)
 
     comm1 = output1.communicate()[0].decode('utf-8').split('\n')
