@@ -22,6 +22,10 @@ mat-card-title-group {
     text-align: left;
 }
 
+.lotDescription {
+    word-wrap: 2;
+}
+
 .grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -38,6 +42,10 @@ mat-card {
     width: auto;
     text-align: center;
     margin-top: -20px;
+}
+
+.lot-card {
+    width: 400px;
 }
 
 #button-section {
