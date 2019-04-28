@@ -13,7 +13,6 @@ import {
   animateChild,
   state
 } from '@angular/animations';
-import * as socketIo from 'socket.io-client';
 import { Subscription } from 'rxjs/Subscription';
 import { repeat, map } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax'
