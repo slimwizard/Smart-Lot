@@ -73,8 +73,6 @@ export class LotComponent implements OnInit {
       this.lot_number = data[0].lot_number;
       this.latitude = data[0].latitude;
       this.longitude = data[0].longitude;
-      console.log(this.latitude, this.longitude)
-      console.log(this.lot_uri)
 
     }, error => console.log(error))
   }
