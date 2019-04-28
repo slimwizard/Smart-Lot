@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
+import flask_profiler
 from time import sleep
 from random import sample
 from sqlalchemy.dialects.postgresql import UUID
