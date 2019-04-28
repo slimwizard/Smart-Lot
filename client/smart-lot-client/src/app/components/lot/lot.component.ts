@@ -35,7 +35,7 @@ export class LotComponent implements OnInit {
   latitude: number
   longitude: number
 
-  isLoading: boolean = false  //**RESET TO TRUE
+  isLoading: boolean = true
   color = 'primary'
   mode = 'indeterminate'
   value = 50
@@ -58,7 +58,7 @@ export class LotComponent implements OnInit {
   // finds all spots where occupied is true and adds the spot numbers to occupied spots list
   getLotAvailibility(): void {
     this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
-      this.isLoading = false; //**RESET TO TRUE
+      this.isLoading = true;
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates
       this.getLotWeather(this.latitude, this.longitude)
