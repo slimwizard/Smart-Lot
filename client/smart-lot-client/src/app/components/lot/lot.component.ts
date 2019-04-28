@@ -25,11 +25,10 @@ export class LotComponent implements OnInit {
   occupiedSpots
   weatherError: boolean
 
-  // Lot_UUIDs = new Map();
-
-  // Lot_UUIDs: any
+  // ADD_LOT: New lot IDs need to be added to Lot_UUIDs
   Lot_UUIDs = {"nethkena": 'a19f71fc-4d20-4790-9e38-31df6a02ac76', "grahama": '1fcfe908-a6a1-4b1e-91bc-da8b4dc9fbcd'}
-  current_UUID: string = this.Lot_UUIDs["grahama"]
+  lot_uri: string = window.location.pathname.split("/").slice(-1)[0];
+  current_UUID: string = this.Lot_UUIDs[this.lot_uri]
   name: any
   description: string
   lot_number: number
@@ -75,6 +74,8 @@ export class LotComponent implements OnInit {
       this.latitude = data[0].latitude;
       this.longitude = data[0].longitude;
       console.log(this.latitude, this.longitude)
+      console.log(this.lot_uri)
+
     }, error => console.log(error))
   }
 
