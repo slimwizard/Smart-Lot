@@ -95,7 +95,7 @@ def receive_image(lot_id, key):
                     update_db_upon_rec(i+1, lot_id, True)
                 else:
                     update_db_upon_rec(i+1, lot_id, False)
-            return jsonify({"success": "true"}), 200
+            return jsonify(results), 200
     else:
         return "ERROR: Invalid key.", 405
 
