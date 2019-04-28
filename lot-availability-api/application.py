@@ -51,7 +51,6 @@ def get_lot(id):
     return response, 200
 
 # gets all lot info by id
-# pls hlp: here's the route I added 
 @application.route('/smart-lot/lots/lot/<id>', methods=['GET'])
 def get_lot_info(id):
     lot_info = db.session.query(Lots).filter_by(lot_id=id)

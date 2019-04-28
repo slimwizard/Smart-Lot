@@ -57,8 +57,6 @@ export class LotComponent implements OnInit {
   getLotAvailibility(): void {
     this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
       this.isLoading = false; //**RESET TO TRUE
-      this.latitude = data[0].latitude;
-      this.longitude = data[0].longitude;
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
       // use first parking spot location for weather coordinates
       this.getLotWeather(this.latitude, this.longitude)
@@ -71,8 +69,8 @@ export class LotComponent implements OnInit {
       this.name = data[0].lot_name; 
       this.description = data[0].description; 
       this.lot_number = data[0].lot_number;
-      //pls hlp: this console.log has all the correct values but...
-      console.log("getLotInfo: ", this.lot_number, this.name, this.description)
+      this.latitude = data[0].latitude;
+      this.longitude = data[0].longitude;
     }, error => console.log(error))
   }
 
@@ -88,14 +86,11 @@ export class LotComponent implements OnInit {
       this.weatherError = true
       setTimeout(() => {this.isLoading=false}, 1000)
     })
-    console.log("getLotWeather: ", this.lot_number, this.name, this.description)
-
   }
 
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
 
   openMap(): void {
-    // window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
     if /* if we're on iOS, open in Apple Maps */
     ((navigator.platform.indexOf("iPhone") != -1) || 
      (navigator.platform.indexOf("iPad") != -1) || 
@@ -112,9 +107,7 @@ export class LotComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getLotAvailibility()
     this.getLotInfo()
-    //pls hlp: ...this one is undefined. looks like this is getting run before getLotInfo fsr
-    console.log("ngOnInit: ", this.lot_number, this.name, this.description)
+    this.getLotAvailibility()
   }
 }
