@@ -2,7 +2,6 @@
 from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, emit, join_room
 from time import sleep
 from random import sample
 from sqlalchemy.dialects.postgresql import UUID
@@ -34,7 +33,6 @@ application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 application.config['LOT_INFO'] = {}
 
 db = SQLAlchemy(application)
-websocket = SocketIO(application)
 
 # index endpoint for smoke testing
 @application.route('/')
@@ -179,29 +177,6 @@ def simulate_activity(lot, flag):
 @application.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
-@websocket.on('connect', namespace='/smart-lot/socket')
-def on_connect():
-    print('client connected')
-    lot_id = request.args.get('lot_id')
-    print(lot_id)
-
-@websocket.on('disconnect', namespace='/smart-lot/socket')
-def on_disconnect():
-    print('client disconnected')
-
-@websocket.on('broadcast', namespace='/smart-lot/socket/')
-def broadcast(lot_id):
-    lot_info = db.session.query(Spots).filter_by(lot_id=lot_id)
-    rows = []
-    for row in lot_info:
-        rows.append(row.as_dict())
-    if len(rows) == 0:
-        abort(404)
-    emit(lot_id, jsonify(rows), broadcast=True)
-
-
-### POST for JSON data if we need it down the road ###
 # @app.route('/smatr-lot/lots', methods=['POST'])
 # def create_task():
 #     if not request.json or not 'title' in request.json:
@@ -216,4 +191,4 @@ def broadcast(lot_id):
 #     return jsonify({'lot': lot}), 201
 
 if __name__ == '__main__':
-    websocket.run(application)
+    application.run()
