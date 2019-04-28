@@ -1,17 +1,12 @@
 from PIL import Image
 from predict import predict
 
-
-
-
-
 def extract_and_predict(lot_file):
+    DEBUG = False
     spot_number = 1
     results = []
     new_spot = '/tmp/tmp.png'
     lot = Image.open(lot_file).transpose(Image.ROTATE_270).rotate(-3)
-    lot.show()
-    # lot = Image.open(lot_file).rotate(-3)
     # ROW 1 CROPPING 
     crop_w = 200
     crop_h = 250
@@ -19,17 +14,15 @@ def extract_and_predict(lot_file):
     start_y = 910
     stride_x = 190
     row_1_spots=6
-    print("ROW 1 SPOTS:\n")
+
+    if DEBUG: print("ROW 1 SPOTS:\n")
     for i in range(row_1_spots): 
         spot = lot.crop((start_x, start_y, start_x + crop_w, start_y + crop_h))  
-        # start_y += 140
         start_x += stride_x 
-        # else: start_x += stride_x 
-        
         spot.save(new_spot)
         prediction = predict(new_spot)
         results.append({"spot": f'{spot_number}', "status": f'{prediction}'})
-        print(f'spot {spot_number}: {prediction}')
+        if DEBUG: print(f'spot {spot_number}: {prediction}')
         spot_number+=1
     print("\n")
     
@@ -43,7 +36,7 @@ def extract_and_predict(lot_file):
     stride_x = 250
     row_2_spots=6
 
-    print("ROW 2 SPOTS:\n")
+    if DEBUG: print("ROW 2 SPOTS:\n")
     for i in range(row_2_spots):
         spot = lot.crop((start_x, start_y , start_x + crop_w, start_y + crop_h))
         if i > 2: start_x += stride_x
@@ -52,7 +45,7 @@ def extract_and_predict(lot_file):
         spot.save(new_spot)
         prediction = predict(new_spot)
         results.append({"spot": f'{spot_number}', "status": f'{prediction}'})
-        print(f'spot {spot_number}: {prediction}')
+        if DEBUG: print(f'spot {spot_number}: {prediction}')
         spot_number+=1
     print("\n")
     
@@ -67,7 +60,7 @@ def extract_and_predict(lot_file):
     stride_x = 280
     row_3_spots = 6
 
-    print("ROW 3 SPOTS:\n")
+    if DEBUG: print("ROW 3 SPOTS:\n")
     for i in range(row_3_spots):
         spot = lot.crop((start_x, start_y , start_x + crop_w, start_y + crop_h))
         # if i == 1: start_x += stride_x - 20
@@ -77,10 +70,8 @@ def extract_and_predict(lot_file):
         spot.save(new_spot)
         prediction = predict(new_spot)
         results.append({"spot": f'{spot_number}', "status": f'{prediction}'})
-        print(f'spot {spot_number}: {prediction}')
-        spot_number+=1
-
-
+        if DEBUG: print(f'spot {spot_number}: {prediction}')
+        spot_number+=1   
     return results
 
     # kill_preview_proc()
