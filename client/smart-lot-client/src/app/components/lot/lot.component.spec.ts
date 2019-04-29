@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NethkenAComponent } from './nethken-a.component';
+import { LotComponent } from './lot.component';
 
-describe('NethkenAComponent', () => {
-  let component: NethkenAComponent;
-  let fixture: ComponentFixture<NethkenAComponent>;
+describe('LotComponent', () => {
+  let component: LotComponent;
+  let fixture: ComponentFixture<LotComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NethkenAComponent ]
+      declarations: [ LotComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NethkenAComponent);
+    fixture = TestBed.createComponent(LotComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

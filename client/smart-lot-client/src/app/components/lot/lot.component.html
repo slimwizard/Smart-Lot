@@ -4,12 +4,11 @@
 
 <div class="main-content grid" *ngIf="!isLoading">
 	<div style="text-align: center;">
-		<mat-card class="card" style="margin-bottom: 10px;">
+		<mat-card class="card lot-card" style="margin-bottom: 10px;">
 				<mat-card-header>
 						<mat-card-title-group>
-								<mat-card-title class="mat-h2" class="lot-title">Nethken A</mat-card-title>
-								<mat-card-subtitle class="lotDescription">The parking lot adjacent to the back of Nethken Hall
-								</mat-card-subtitle>
+								<mat-card-title class="mat-h2" class="lotTitle">{{name}}</mat-card-title>
+								<mat-card-subtitle class="lotDescription">{{description}}</mat-card-subtitle>
 						</mat-card-title-group>
 						<button mat-button class="lot-image-button" >
 								<div id="lot-image-icon" class="lot-image-icon" (click)="openDialog()">

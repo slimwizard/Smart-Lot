@@ -19,12 +19,11 @@ import { ajax } from 'rxjs/ajax'
 import polling from 'rx-polling';
 
 @Component({
-  selector: 'app-nethken-a',
-  templateUrl: './nethken-a.component.html',
-  styleUrls: ['./nethken-a.component.scss']
+  selector: 'app-lot',
+  templateUrl: './lot.component.html',
+  styleUrls: ['./lot.component.scss']
 })
-
-export class NethkenAComponent implements OnInit, OnDestroy {
+export class LotComponent implements OnInit, OnDestroy {
 
   sub: Subscription;
   lot_data: any;
@@ -34,9 +33,18 @@ export class NethkenAComponent implements OnInit, OnDestroy {
 	public dialog: MatDialog) { }
   occupiedSpots
   weatherError: boolean
-  NethkenA_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
 
-  isLoading = true;
+  // ADD_LOT: New lot IDs need to be added to Lot_UUIDs
+  Lot_UUIDs = {"nethkena": 'a19f71fc-4d20-4790-9e38-31df6a02ac76', "grahama": '1fcfe908-a6a1-4b1e-91bc-da8b4dc9fbcd'}
+  lot_uri: string = window.location.pathname.split("/").slice(-1)[0];
+  current_UUID: string = this.Lot_UUIDs[this.lot_uri]
+  name: any
+  description: string
+  lot_number: number
+  latitude: number
+  longitude: number
+
+  isLoading = true
   color = 'primary'
   mode = 'indeterminate'
   value = 50
@@ -51,8 +59,6 @@ export class NethkenAComponent implements OnInit, OnDestroy {
     'Drizzle' : false,
     'Thunderstorm' : false
   }
-  latitude: number
-  longitude: number
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
@@ -60,18 +66,28 @@ export class NethkenAComponent implements OnInit, OnDestroy {
 
 	// finds all spots where occupied is true and adds the spot numbers to occupied spots list
   getLotAvailibility(): void {
-    this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
+    this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
       this.isLoading = true;
-      this.latitude = data[0].latitude;
-      this.longitude = data[0].longitude;
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number);
       // use first parking spot location for weather coordinates
       this.getLotWeather(this.latitude, this.longitude);
     }, error => console.log(error));
   }
 
+  // gets all info about a lot
+  getLotInfo(): void {
+    this.lotAvailibilityService.getLotData(this.current_UUID).subscribe(data => {
+      this.name = data[0].lot_name; 
+      this.description = data[0].description; 
+      this.lot_number = data[0].lot_number;
+      this.latitude = data[0].latitude;
+      this.longitude = data[0].longitude;
+
+    }, error => console.log(error))
+  }
+
   updateLotAvailibility(): void {
-    this.lotAvailibilityService.getLotData(this.NethkenA_UUID).subscribe(data => {
+    this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number);
     }, error => console.log(error));
   }
@@ -93,7 +109,6 @@ export class NethkenAComponent implements OnInit, OnDestroy {
   kelvinToFahrenheit = (temp: number) : number => (temp-273.15)*(9/5)+32
 
   openMap(): void {
-    // window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`)
     if /* if we're on iOS, open in Apple Maps */
     ((navigator.platform.indexOf('iPhone') != -1) || 
      (navigator.platform.indexOf('iPad') != -1) || 
@@ -110,24 +125,25 @@ export class NethkenAComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getLotInfo()
+    this.getLotAvailibility()
 	this.getLotAvailibility();
 	const request$ = ajax({
-		url: 'http://localhost:5000/smart-lot/lots/polling/' + this.NethkenA_UUID,
+		url: 'http://localhost:5000/smart-lot/lots/polling/' + this.current_UUID,
 		crossDomain: true
 	}).pipe(
 		map(response => response.response || [])
 	);
 
 	this.sub = polling(request$, {interval: 5000})	  
-	  .subscribe((lot_data) => {
+    .subscribe((lot_data) => {
 		this.occupiedSpots = lot_data.filter(item => item.occupied == true).map(item => item.spot_number);
-	  }, (error) => {
-	  	console.error(error);
-	  });
+    }, (error) => {
+      console.error(error);
+    });
   }
   
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 }
-
