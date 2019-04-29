@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { LotModalComponent } from './lot-modal/lot-modal.component'
-import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service'
-import { MatDialog } from '@angular/material'
-import { WeatherService } from '../../services/weather/weather.service'
+import { Component, OnInit, OnDestroy, Injectable } from '@angular/core';
+import { LotModalComponent } from './lot-modal/lot-modal.component';
+import { ParkingSpot, LotAvailabilityService } from '../../services/lot-availibility/lot-availability.service';
+import { MatDialog } from '@angular/material';
+import { WeatherService } from '../../services/weather/weather.service';
 import {
   transition,
   trigger,
@@ -13,15 +13,24 @@ import {
   animateChild,
   state
 } from '@angular/animations';
+import { Subscription } from 'rxjs/Subscription';
+import { repeat, map } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax'
+import polling from 'rx-polling';
 
 @Component({
   selector: 'app-lot',
   templateUrl: './lot.component.html',
   styleUrls: ['./lot.component.scss']
 })
-export class LotComponent implements OnInit {
+export class LotComponent implements OnInit, OnDestroy {
 
-  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog) { }
+  sub: Subscription;
+  lot_data: any;
+
+  constructor(private lotAvailibilityService: LotAvailabilityService,
+	private weatherService: WeatherService,
+	public dialog: MatDialog) { }
   occupiedSpots
   weatherError: boolean
 
@@ -35,7 +44,7 @@ export class LotComponent implements OnInit {
   latitude: number
   longitude: number
 
-  isLoading: boolean = true
+  isLoading = true
   color = 'primary'
   mode = 'indeterminate'
   value = 50
@@ -43,26 +52,26 @@ export class LotComponent implements OnInit {
   currentTemp: string
   isNight: boolean
   weatherResponses = {
-    "Clear" : false, 
-    "Clouds": false,
-    "Snow" : false,
-    "Rain" : false,
-    "Drizzle" : false,
-    "Thunderstorm" : false
+    'Clear' : false,
+    'Clouds': false,
+    'Snow' : false,
+    'Rain' : false,
+    'Drizzle' : false,
+    'Thunderstorm' : false
   }
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
   }
 
-  // finds all spots where occupied is true and adds the spot numbers to occupied spots list
+	// finds all spots where occupied is true and adds the spot numbers to occupied spots list
   getLotAvailibility(): void {
     this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
       this.isLoading = true;
-      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number)
+      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number);
       // use first parking spot location for weather coordinates
-      this.getLotWeather(this.latitude, this.longitude)
-    }, error => console.log(error))
+      this.getLotWeather(this.latitude, this.longitude);
+    }, error => console.log(error));
   }
 
   // gets all info about a lot
@@ -75,6 +84,12 @@ export class LotComponent implements OnInit {
       this.longitude = data[0].longitude;
 
     }, error => console.log(error))
+  }
+
+  updateLotAvailibility(): void {
+    this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
+      this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number);
+    }, error => console.log(error));
   }
 
 
@@ -95,22 +110,40 @@ export class LotComponent implements OnInit {
 
   openMap(): void {
     if /* if we're on iOS, open in Apple Maps */
-    ((navigator.platform.indexOf("iPhone") != -1) || 
-     (navigator.platform.indexOf("iPad") != -1) || 
-     (navigator.platform.indexOf("iPod") != -1))
+    ((navigator.platform.indexOf('iPhone') != -1) || 
+     (navigator.platform.indexOf('iPad') != -1) || 
+     (navigator.platform.indexOf('iPod') != -1))
     window.open(`maps://maps.google.com/?q=${this.latitude},${this.longitude}`);
     else /* else use Google */
     window.open(`https://maps.google.com/?q=${this.latitude},${this.longitude}`);
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(LotModalComponent,{
-      width: "600px"
-    })
+    const dialogRef = this.dialog.open(LotModalComponent, {
+      width: '600px'
+    });
   }
 
   ngOnInit() {
     this.getLotInfo()
     this.getLotAvailibility()
+	this.getLotAvailibility();
+	const request$ = ajax({
+		url: 'http://localhost:5000/smart-lot/lots/polling/' + this.current_UUID,
+		crossDomain: true
+	}).pipe(
+		map(response => response.response || [])
+	);
+
+	this.sub = polling(request$, {interval: 5000})	  
+    .subscribe((lot_data) => {
+		this.occupiedSpots = lot_data.filter(item => item.occupied == true).map(item => item.spot_number);
+    }, (error) => {
+      console.error(error);
+    });
+  }
+  
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
