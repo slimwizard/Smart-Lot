@@ -13,6 +13,8 @@ import subprocess
 from pathlib import Path
 import numpy as np
 import time
+from extract_and_predict import extract_and_predict
+
 
 UPLOAD_FOLDER = Path("../images/")
 
@@ -92,29 +94,13 @@ def get_lots_by_location(lat_long):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def split_image(img):
-    spots = {}
-    spot_id = 0
-    spot_lengths = [85]
-    # row 1 cropping
-    for i in range(320, 700, spot_lengths[0]):
-        spot_id += 1
-        spots[spot_id] = img.crop((i, 440, i+spot_lengths[0], 540))
-    return spots
-
-def preprocess_image(img):
-    cont = ImageEnhance.Contrast(img).enhance(3.0)
-    bright = ImageEnhance.Brightness(cont).enhance(1.0)
-    sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
-    sharp.save('../image-processing-server/tmp', format='PNG')
-
 def update_db_upon_rec(spot_num, lot_id, occ):
     row_changed = db.session.query(Spots).filter_by(spot_number=spot_num,
             lot_id=lot_id).update(dict(occupied=occ))
     db.session.commit()
     print('Spot {} occupied updated to {}.'.format(spot_num, occ))
 
-@application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
+@application.route('/api/upload/<string:lot_id>/<string:key>', methods=['POST'])
 def receive_image(lot_id, key):
     if key == "shoop":
         if 'file' not in request.files:
@@ -123,30 +109,15 @@ def receive_image(lot_id, key):
 
         if file.filename == '':
             return "ERROR: File upload failed. File has no filename."
-
+        
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(
-                application.config['UPLOAD_FOLDER'], filename))
-            img = Image.open(UPLOAD_FOLDER / filename)
-            img = img.rotate(5)
-            img.save(UPLOAD_FOLDER / filename)
-
-            spots = split_image(img)
-            payload = {}
-            for i in spots:
-                preprocess_image(spots[i])
-                proc = subprocess.Popen(('python3',
-                                         '../image-processing-server/detection.py',
-                                         'tmp'), stdout=subprocess.PIPE)
-                output = proc.communicate()[0]
-                if output.decode('utf-8').strip() == 'SUCCESS':
-                    update_db_upon_rec(i, lot_id, True)
-                    payload[i]=True
+            results = extract_and_predict(file)
+            for i in range(0, len(results)):
+                if results[i]['status'] == "occupied":
+                    update_db_upon_rec(i+1, lot_id, True)
                 else:
-                    update_db_upon_rec(i, lot_id, False)
-                    payload[i]=False
-            return jsonify(payload), 200
+                    update_db_upon_rec(i+1, lot_id, False)
+            return jsonify(results), 200
     else:
         return "ERROR: Invalid key.", 405
 
