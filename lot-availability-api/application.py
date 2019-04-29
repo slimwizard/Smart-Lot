@@ -54,7 +54,6 @@ def get_lot(id):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response, 200
 
-<<<<<<< HEAD
 # gets all lot info by id
 @application.route('/smart-lot/lots/lot/<id>', methods=['GET'])
 def get_lot_info(id):
@@ -67,7 +66,8 @@ def get_lot_info(id):
     response = jsonify(rows)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response, 200
-=======
+
+# does something w profiler maybe?
 @application.route('/smart-lot/lots/polling/<id>', methods=['GET'])
 def get_lot_polling(id):
     while True:
@@ -86,7 +86,6 @@ def get_lot_polling(id):
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response, 200
         time.sleep(5)
->>>>>>> ce3cfae479b30091c07b9876d4a7e8305c9d4435
 
 @application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
 def get_lots_by_location(lat_long):
