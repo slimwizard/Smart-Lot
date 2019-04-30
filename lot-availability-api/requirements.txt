@@ -34,3 +34,4 @@ tensorflow-estimator==1.13.0
 termcolor==1.1.0
 virtualenv==16.3.0
 Werkzeug==0.14.1
+flask_profiler==1.8.1
