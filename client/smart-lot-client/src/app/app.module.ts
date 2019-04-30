@@ -9,7 +9,7 @@ import { HomeComponent } from './components/home/home.component';
 import { NethkenAComponent } from './components/nethken-a/nethken-a.component';
 import { AboutComponent } from './components/about/about.component';
 import { LotModalComponent } from './components/nethken-a/lot-modal/lot-modal.component';
-import { CookieService } from 'ngx-cookie-service'
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [

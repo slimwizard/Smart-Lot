@@ -13,6 +13,7 @@ import {
   animateChild,
   state
 } from '@angular/animations';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-nethken-a',
@@ -22,7 +23,7 @@ import {
 
 export class NethkenAComponent implements OnInit {
 
-  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog) { }
+  constructor(private lotAvailibilityService: LotAvailabilityService, private weatherService: WeatherService, public dialog: MatDialog, private cookie: CookieService) { }
   occupiedSpots
   weatherError: boolean
   NethkenA_UUID: string = 'a19f71fc-4d20-4790-9e38-31df6a02ac76'
@@ -44,6 +45,7 @@ export class NethkenAComponent implements OnInit {
   }
   latitude: number
   longitude: number
+  colorblindMode: boolean
   
   isOccupied(spotNumber: number): boolean {
     return this.occupiedSpots.indexOf(spotNumber) != -1
@@ -95,6 +97,15 @@ export class NethkenAComponent implements OnInit {
 
   ngOnInit() {
     this.getLotAvailibility()
+  }
+  
+  ngDoCheck() {
+    if (this.cookie.get('colorblindModeCookie') === 'true') {
+      this.colorblindMode = true
+    }
+    else{
+      this.colorblindMode = false
+    }
   }
 }
 

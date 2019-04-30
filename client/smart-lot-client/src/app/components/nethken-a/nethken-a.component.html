@@ -494,6 +494,21 @@
 					x="199.60446" y="13.612813" />
 			</g>
 		</svg>
+		<mat-card *ngIf="colorblindMode" class="card" style="margin-top: 10px;">
+			<mat-card-header>
+					<mat-card-title-group>
+							<mat-card-title class="mat-h2" class="lot-title">Key</mat-card-title>
+					</mat-card-title-group>
+			</mat-card-header>
+			<div style="float:left; padding-left:25%; padding-bottom:5%">
+			<svg height="50" width="50"><rect height="50" width="50" style="height:50;width:50;fill:url(#pattern-circles);"></rect></svg>
+			<div style="font-family:Roboto">Open</div>
+			</div>
+			<div>
+			<svg height="50" width="50"><g><rect height="50" width="50" style="height:50;width:50;fill:url(#diagonal-stripes-4-8)"></rect></g></svg>
+			<div>Taken</div>
+			</div>
+		</mat-card>
 	</div> 
 </div>
 
