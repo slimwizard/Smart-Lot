@@ -38,7 +38,7 @@ application.config['LOT_INFO'] = {}
 # change enabled to False in production
 # true for testing
 application.config["flask_profiler"] = {
-    "enabled": True,
+    "enabled": False,
     "storage": {
         "engine": "sqlite"
     },
