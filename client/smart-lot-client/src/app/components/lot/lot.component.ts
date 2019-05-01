@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { repeat, map } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax'
 import polling from 'rx-polling';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-lot',
@@ -30,7 +31,7 @@ export class LotComponent implements OnInit, OnDestroy {
 
   constructor(private lotAvailibilityService: LotAvailabilityService,
 	private weatherService: WeatherService,
-	public dialog: MatDialog) { }
+	public dialog: MatDialog, private cookie: CookieService) { }
   occupiedSpots
   weatherError: boolean
 
@@ -42,7 +43,8 @@ export class LotComponent implements OnInit, OnDestroy {
   description: string
   lot_number: number
   latitude: number
-  longitude: number
+	longitude: number
+	colorblindMode: boolean
 
   isLoading = true
   color = 'primary'
@@ -69,9 +71,7 @@ export class LotComponent implements OnInit, OnDestroy {
     this.lotAvailibilityService.getSpotData(this.current_UUID).subscribe(data => {
       this.isLoading = true;
       this.occupiedSpots = data.filter(item => item.occupied == true).map(item => item.spot_number);
-      // use first parking spot location for weather coordinates
-      this.getLotWeather(this.latitude, this.longitude);
-    }, error => console.log(error));
+      }, error => console.log(error));
   }
 
   // gets all info about a lot
@@ -82,7 +82,8 @@ export class LotComponent implements OnInit, OnDestroy {
       this.lot_number = data[0].lot_number;
       this.latitude = data[0].latitude;
       this.longitude = data[0].longitude;
-
+	  // use first parking spot location for weather coordinates
+      this.getLotWeather(this.latitude, this.longitude);
     }, error => console.log(error))
   }
 
@@ -126,7 +127,6 @@ export class LotComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getLotInfo()
-    this.getLotAvailibility()
 	this.getLotAvailibility();
 	const request$ = ajax({
 		url: 'http://localhost:5000/smart-lot/lots/polling/' + this.current_UUID,
@@ -141,6 +141,15 @@ export class LotComponent implements OnInit, OnDestroy {
     }, (error) => {
       console.error(error);
     });
+  }
+
+  ngDoCheck() {
+    if (this.cookie.get('colorblindModeCookie') === 'true') {
+      this.colorblindMode = true
+    }
+    else{
+      this.colorblindMode = false
+    }
   }
   
   ngOnDestroy() {
