@@ -1,5 +1,5 @@
 #!python
-from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for
+from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for, abort
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 import flask_profiler
@@ -38,7 +38,7 @@ application.config['LOT_INFO'] = {}
 # change enabled to False in production
 # true for testing
 application.config["flask_profiler"] = {
-    "enabled": False,
+    "enabled": True,
     "storage": {
         "engine": "sqlite"
     },
@@ -88,7 +88,6 @@ def get_lot_info(id):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response, 200
 
-# does something w profiler maybe?
 @application.route('/smart-lot/lots/polling/<id>', methods=['GET'])
 @flask_profiler.profile()
 def get_lot_polling(id):
@@ -106,7 +105,8 @@ def get_lot_polling(id):
             response = jsonify(updated_rows)
             application.config['LOT_INFO'] = updated_lot
             response.headers.add('Access-Control-Allow-Origin', '*')
-            return response, 200
+            response.status_code = 200
+            return response
         time.sleep(5)
 
 @application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
@@ -134,7 +134,6 @@ def allowed_file(filename):
 def update_db_upon_rec(spot_num, lot_id, occ):
     row_changed = db.session.query(Spots).filter_by(spot_number=spot_num,
             lot_id=lot_id).update(dict(occupied=occ))
-    db.session.commit()
     print('Spot {} occupied updated to {}.'.format(spot_num, occ))
 
 @application.route('/api/upload/<string:lot_id>/<string:key>', methods=['POST'])
@@ -155,6 +154,7 @@ def receive_image(lot_id, key):
                     update_db_upon_rec(i+1, lot_id, True)
                 else:
                     update_db_upon_rec(i+1, lot_id, False)
+            db.session.commit()
             return jsonify(results), 200
     else:
         return "ERROR: Invalid key.", 405

@@ -4,7 +4,7 @@
 
 <div class="main-content grid" *ngIf="!isLoading">
 	<div style="text-align: center;">
-		<mat-card class="card lot-card" style="margin-bottom: 10px;">
+		<mat-card class="card" style="margin-bottom: 10px;">
 				<mat-card-header>
 						<mat-card-title-group>
 								<mat-card-title class="mat-h2" class="lotTitle">{{name}}</mat-card-title>
@@ -269,6 +269,26 @@
 			<metadata id="metadata5">
 
 			</metadata>
+
+			<mask maskUnits="userSpaceOnUse" id="fade">
+				<linearGradient id="gradient" x1="0" y1="0" x2="0" y2="100%">
+				  <stop offset ="0" style="stop-color: #FFFFFF" />
+				  <stop offset ="1" style="stop-color: #000000" />
+				  <stop offset ="0" style="stop-color: #FFFFFF" />
+				</linearGradient>
+				<rect fill="url(#gradient)" width="100%" height="100%" />
+			  </mask>
+
+			<pattern id="pattern-circles" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+				<rect _ngcontent-c2="" height="12" mask="url(#fade)" style="stroke:none;fill: rgb(128, 231, 128);" width="8" x="0" y="0"></rect>
+				<circle mask="url(#fade)" cx="1" cy="1" r="1" style="stroke:none; fill:rgb(42, 138, 42);" />
+			</pattern>
+
+			<pattern id="diagonal-stripes-4-8" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+				<rect _ngcontent-c2="" height="12" mask="url(#fade)" style="stroke:none;fill: rgb(255, 112, 112);" width="8" x="0" y="0"></rect>
+				<rect mask="url(#fade)" x="0" y="0" width="2.5" height="8" style="stroke:none; fill:rgb(206, 33, 33);" />
+			 </pattern>
+
 			<g id="layer2">
 				<rect y="13.612826" x="9.4382782" height="49.136898" width="32.072338" id="spot1"
 					[ngClass]="isOccupied(1) ? 'takenSpot' : 'openSpot'" />
@@ -466,6 +486,21 @@
 					x="199.60446" y="13.612813" />
 			</g>
 		</svg>
+		<mat-card *ngIf="colorblindMode" class="card" style="margin-top: 10px;">
+			<mat-card-header>
+					<mat-card-title-group>
+							<mat-card-title class="mat-h2" class="lot-title">Key</mat-card-title>
+					</mat-card-title-group>
+			</mat-card-header>
+			<div style="float:left; padding-left:25%; padding-bottom:5%">
+			<svg height="50" width="50"><rect height="50" width="50" style="height:50;width:50;fill:url(#pattern-circles);"></rect></svg>
+			<div style="font-family:Roboto">Open</div>
+			</div>
+			<div>
+			<svg height="50" width="50"><g><rect height="50" width="50" style="height:50;width:50;fill:url(#diagonal-stripes-4-8)"></rect></g></svg>
+			<div>Taken</div>
+			</div>
+		</mat-card>
 	</div> 
 </div>
 

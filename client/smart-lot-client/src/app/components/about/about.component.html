@@ -12,6 +12,13 @@
           <p><span style="color: red">Red</span> indicates that a parking spot is <i>occupied</i> and <span style="color: green">green</span> indicates <i>available</i> parking.</p>
           <p>Certain spots may be designated different colors depending on the location such as handicap spots or other reserved spots.</p>
         
+        <h3>Preferences</h3>
+        <p>
+          <mat-slide-toggle id="NightModeToggle" [checked]="nightMode" (change)="onChangeNightMode($event)">Night Mode</mat-slide-toggle>
+        </p>
+        <p>
+          <mat-slide-toggle id="ColorblindModeToggle" [checked]="colorblindMode" (change)="onChangeColorblindMode($event)">Colorblind Mode</mat-slide-toggle>
+        </p>
         <a mat-button class="backButton" (click)="backClicked()">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" class="material-icons" viewBox="0 0 24 24"><path  d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"/><path fill="none" d="M0 0h24v24H0z"/></svg>
             Back</a>
