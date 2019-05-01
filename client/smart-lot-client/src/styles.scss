@@ -13,13 +13,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .openSpot {
     fill: rgb(128, 231, 128);
     color: rgb(128, 231, 128);
+	transition: fill 1.5s ease;
     fill-opacity:1;stroke:rgb(128, 231, 128);stroke-width:0.26458332;stroke-opacity:1
 }
 
 .takenSpot {
     fill: rgb(255, 112, 112);
-    color: rgb(255, 112, 112);
-    fill-opacity:1;stroke:rgb(255, 112, 112);stroke-width:0.26458332;stroke-opacity:1
+    color: rgb(255, 112, 112); 
+	transition: fill 1.5s ease;
+	fill-opacity:1;stroke:rgb(255, 112, 112);stroke-width:0.26458332;stroke-opacity:1
 }
 
 /* div {text-align: center; align-content: center;} */

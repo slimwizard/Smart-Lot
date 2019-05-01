@@ -25,14 +25,14 @@ describe('running Nethken A tests', () => {
     expect(nethkenAPage.getBackButton().isDisplayed()).toBeTruthy();
   })
 
+  it('should display refresh button', () => {
+    expect(nethkenAPage.getRefreshButton().isDisplayed()).toBeTruthy();
+  })
+
   it('should navigate home when back button is clicked', () => {
     const backButton = nethkenAPage.getBackButton();
     backButton.click();
     expect(browser.driver.getCurrentUrl()).toContain('/home');
-  })
-
-  it('should display refresh button', () => {
-    expect(nethkenAPage.getRefreshButton().isDisplayed()).toBeTruthy();
   })
 
   it('should display display svg map', () => {

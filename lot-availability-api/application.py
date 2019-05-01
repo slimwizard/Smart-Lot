@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
+import flask_profiler
 from time import sleep
 from random import sample
 from sqlalchemy.dialects.postgresql import UUID
@@ -12,6 +13,9 @@ import os
 import subprocess
 from pathlib import Path
 import numpy as np
+import time
+from extract_and_predict import extract_and_predict
+
 
 UPLOAD_FOLDER = Path("../images/")
 
@@ -29,6 +33,26 @@ application = Flask(__name__)
 
 application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
+application.config['LOT_INFO'] = {}
+
+# change enabled to False in production
+# true for testing
+application.config["flask_profiler"] = {
+    "enabled": False,
+    "storage": {
+        "engine": "sqlite"
+    },
+    "basicAuth":{
+        "enabled": True,
+        "username": "admin",
+        "password": "admin"
+    },
+    "ignore": [
+	    "^/static/.*"
+	]
+}
+
+flask_profiler.init_app(application)
 
 db = SQLAlchemy(application)
 
@@ -37,10 +61,24 @@ db = SQLAlchemy(application)
 def index():
     return "Hewwo wowwd"
 
-# gets all spots in a lot by id
+# gets all spots in a lot by lot id
 @application.route('/smart-lot/lots/<id>', methods=['GET'])
+@flask_profiler.profile()
 def get_lot(id):
-    lot_info = db.session.query(Spots).filter_by(lot_id=id)
+    application.config['LOT_INFO'] = db.session.query(Spots).filter_by(lot_id=id).all()
+    rows = []
+    for row in application.config['LOT_INFO']:
+        rows.append(row.as_dict())
+    if len(rows) == 0:
+        abort(404)
+    response = jsonify(rows)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response, 200
+
+# gets all lot info by id
+@application.route('/smart-lot/lots/lot/<id>', methods=['GET'])
+def get_lot_info(id):
+    lot_info = db.session.query(Lots).filter_by(lot_id=id)
     rows = []
     for row in lot_info:
         rows.append(row.as_dict())
@@ -50,7 +88,29 @@ def get_lot(id):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response, 200
 
+# does something w profiler maybe?
+@application.route('/smart-lot/lots/polling/<id>', methods=['GET'])
+@flask_profiler.profile()
+def get_lot_polling(id):
+    while True:
+        updated_lot = db.session.query(Spots).filter_by(lot_id=id).all()
+        updated_rows = []
+        rows = []
+        for row in updated_lot:
+            updated_rows.append(row.as_dict())
+        for row in application.config['LOT_INFO']:
+            rows.append(row.as_dict())
+        if len(rows) == 0 or len(updated_rows) == 0:
+            abort(404)
+        if rows != updated_rows:
+            response = jsonify(updated_rows)
+            application.config['LOT_INFO'] = updated_lot
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 200
+        time.sleep(5)
+
 @application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
+@flask_profiler.profile()
 def get_lots_by_location(lat_long):
     print(lat_long)
     location_list = lat_long.split(",")
@@ -71,29 +131,14 @@ def get_lots_by_location(lat_long):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def split_image(img):
-    spots = {}
-    spot_id = 0
-    spot_lengths = [85]
-    # row 1 cropping
-    for i in range(320, 700, spot_lengths[0]):
-        spot_id += 1
-        spots[spot_id] = img.crop((i, 440, i+spot_lengths[0], 540))
-    return spots
-
-def preprocess_image(img):
-    cont = ImageEnhance.Contrast(img).enhance(3.0)
-    bright = ImageEnhance.Brightness(cont).enhance(1.0)
-    sharp = ImageEnhance.Sharpness(bright).enhance(2.5)
-    sharp.save('../image-processing-server/tmp', format='PNG')
-
 def update_db_upon_rec(spot_num, lot_id, occ):
     row_changed = db.session.query(Spots).filter_by(spot_number=spot_num,
             lot_id=lot_id).update(dict(occupied=occ))
     db.session.commit()
     print('Spot {} occupied updated to {}.'.format(spot_num, occ))
 
-@application.route('/smart-lot/upload/<string:lot_id>/<string:key>', methods=['POST'])
+@application.route('/api/upload/<string:lot_id>/<string:key>', methods=['POST'])
+@flask_profiler.profile()
 def receive_image(lot_id, key):
     if key == "shoop":
         if 'file' not in request.files:
@@ -102,30 +147,15 @@ def receive_image(lot_id, key):
 
         if file.filename == '':
             return "ERROR: File upload failed. File has no filename."
-
+        
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(
-                application.config['UPLOAD_FOLDER'], filename))
-            img = Image.open(UPLOAD_FOLDER / filename)
-            img = img.rotate(5)
-            img.save(UPLOAD_FOLDER / filename)
-
-            spots = split_image(img)
-            payload = {}
-            for i in spots:
-                preprocess_image(spots[i])
-                proc = subprocess.Popen(('python3',
-                                         '../image-processing-server/detection.py',
-                                         'tmp'), stdout=subprocess.PIPE)
-                output = proc.communicate()[0]
-                if output.decode('utf-8').strip() == 'SUCCESS':
-                    update_db_upon_rec(i, lot_id, True)
-                    payload[i]=True
+            results = extract_and_predict(file)
+            for i in range(0, len(results)):
+                if results[i]['status'] == "occupied":
+                    update_db_upon_rec(i+1, lot_id, True)
                 else:
-                    update_db_upon_rec(i, lot_id, False)
-                    payload[i]=False
-            return jsonify(payload), 200
+                    update_db_upon_rec(i+1, lot_id, False)
+            return jsonify(results), 200
     else:
         return "ERROR: Invalid key.", 405
 
@@ -133,6 +163,7 @@ def receive_image(lot_id, key):
 # 1 being true, 0 being false
 
 @application.route('/smart-lot/test/<string:lot_id>/<int:api_flag>', methods=['GET'])
+@flask_profiler.profile()
 def flag_bit(lot_id, api_flag):
     updated_spots = simulate_activity(lot_id, 1)
     return ''.join(['spot:{}\noccupied:{}\n'.format(
@@ -154,10 +185,9 @@ def simulate_activity(lot, flag):
         return "stopped"
 
 @application.errorhandler(404)
+@flask_profiler.profile()
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
-### POST for JSON data if we need it down the road ###
 # @app.route('/smatr-lot/lots', methods=['POST'])
 # def create_task():
 #     if not request.json or not 'title' in request.json:
