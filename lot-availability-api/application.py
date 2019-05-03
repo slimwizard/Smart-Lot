@@ -93,6 +93,7 @@ def get_lot_info(id):
 def get_lot_polling(id):
     while True:
         updated_lot = db.session.query(Spots).filter_by(lot_id=id).all()
+        db.session.close()
         updated_rows = []
         rows = []
         for row in updated_lot:
