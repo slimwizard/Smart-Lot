@@ -2,7 +2,6 @@
 from flask import Flask, jsonify, make_response, request, redirect, send_from_directory, url_for, abort
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
-import flask_profiler
 from time import sleep
 from random import sample
 from sqlalchemy.dialects.postgresql import UUID
@@ -35,25 +34,6 @@ application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(
 application.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
 application.config['LOT_INFO'] = {}
 
-# change enabled to False in production
-# true for testing
-application.config["flask_profiler"] = {
-    "enabled": True,
-    "storage": {
-        "engine": "sqlite"
-    },
-    "basicAuth":{
-        "enabled": True,
-        "username": "admin",
-        "password": "admin"
-    },
-    "ignore": [
-	    "^/static/.*"
-	]
-}
-
-flask_profiler.init_app(application)
-
 db = SQLAlchemy(application)
 
 # index endpoint for smoke testing
@@ -63,7 +43,6 @@ def index():
 
 # gets all spots in a lot by lot id
 @application.route('/smart-lot/lots/<id>', methods=['GET'])
-@flask_profiler.profile()
 def get_lot(id):
     application.config['LOT_INFO'] = db.session.query(Spots).filter_by(lot_id=id).all()
     rows = []
@@ -89,7 +68,6 @@ def get_lot_info(id):
     return response, 200
 
 @application.route('/smart-lot/lots/polling/<id>', methods=['GET'])
-@flask_profiler.profile()
 def get_lot_polling(id):
     while True:
         updated_lot = db.session.query(Spots).filter_by(lot_id=id).all()
@@ -111,7 +89,6 @@ def get_lot_polling(id):
         time.sleep(5)
 
 @application.route('/smart-lot/lots/by_location/<string:lat_long>', methods=['GET'])
-@flask_profiler.profile()
 def get_lots_by_location(lat_long):
     print(lat_long)
     location_list = lat_long.split(",")
@@ -138,7 +115,6 @@ def update_db_upon_rec(spot_num, lot_id, occ):
     print('Spot {} occupied updated to {}.'.format(spot_num, occ))
 
 @application.route('/api/upload/<string:lot_id>/<string:key>', methods=['POST'])
-@flask_profiler.profile()
 def receive_image(lot_id, key):
     if key == "shoop":
         if 'file' not in request.files:
@@ -162,9 +138,7 @@ def receive_image(lot_id, key):
 
 # flag should be 0 or 1
 # 1 being true, 0 being false
-
 @application.route('/smart-lot/test/<string:lot_id>/<int:api_flag>', methods=['GET'])
-@flask_profiler.profile()
 def flag_bit(lot_id, api_flag):
     updated_spots = simulate_activity(lot_id, 1)
     return ''.join(['spot:{}\noccupied:{}\n'.format(
@@ -186,7 +160,6 @@ def simulate_activity(lot, flag):
         return "stopped"
 
 @application.errorhandler(404)
-@flask_profiler.profile()
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 # @app.route('/smatr-lot/lots', methods=['POST'])
