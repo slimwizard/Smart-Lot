@@ -2,7 +2,7 @@ from PIL import Image
 from predict import predict
 
 def extract_and_predict(lot_file):
-    DEBUG = True
+    DEBUG = False
     spot_number = 1
     results = []
     new_spot = '/tmp/tmp.png'
