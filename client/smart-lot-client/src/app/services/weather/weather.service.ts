@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 export class WeatherService {
 
   API_KEY: string = "8470d59a069473169bc0829191f4bd51"
-  API_URL: string = "http://api.openweathermap.org/data/2.5/weather"
+  API_URL: string = "https://api.openweathermap.org/data/2.5/weather"
 
   constructor(private http: HttpClient) { }
 
