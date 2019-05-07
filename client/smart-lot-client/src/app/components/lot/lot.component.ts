@@ -129,7 +129,8 @@ export class LotComponent implements OnInit, OnDestroy {
     this.getLotInfo()
 	this.getLotAvailibility();
 	const request$ = ajax({
-		url: 'http://localhost:5000/smart-lot/lots/polling/' + this.current_UUID,
+        url: 'api.smart-lot.io/smart-lot/lots/polling/' + this.current_UUID,
+        //url: 'http://127.0.0.1:5000/smart-lot/lots/polling/' + this.current_UUID,
 		crossDomain: true
 	}).pipe(
 		map(response => response.response || [])

@@ -56,7 +56,6 @@ export class HomeComponent implements OnInit {
       }
       for (let i of this.lot_names) {
         this.lots.push( {name: this.formatName(i) , routerLink: this.formatRouterLink(i)} )
-        console.log(this.formatRouterLink(i))
       }
       setTimeout(() => {this.isLoading=false}, 1000)
     })
@@ -69,7 +68,6 @@ export class HomeComponent implements OnInit {
   formatRouterLink(routerLink): String {
     let link = routerLink.toLowerCase().replace(/\s/g, '')
     return "/" + link   
-    // return "/" + routerLink.charAt(0).toLowerCase() + routerLink.slice(1);    
   }
 
   ngOnInit() {
