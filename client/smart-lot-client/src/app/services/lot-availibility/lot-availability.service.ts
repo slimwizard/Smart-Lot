@@ -16,17 +16,17 @@ export class LotAvailabilityService {
   constructor(private http: HttpClient) { }
 
   getSpotData(lotID: string): Observable<ParkingSpot[]> {
-    let url = this.api_url + lotID
+    let url = this.api_url_dev + lotID
     return this.http.get<ParkingSpot[]>(url)
   }
 
   getLotsByLocation(location: string): Observable<ParkingLot[]> {
-    let url = this.api_url + "by_location/" + location
+    let url = this.api_url_dev + "by_location/" + location
     return this.http.get<ParkingLot[]>(url)
   }
 
   getLotData(lotID: string): Observable<ParkingLot[]> {
-    let url = this.api_url + "lot/" + lotID
+    let url = this.api_url_dev + "lot/" + lotID
     return this.http.get<ParkingLot[]>(url)
   }
 }
