@@ -83,7 +83,7 @@ def get_lot_polling(id):
         if rows != updated_rows:
             response = jsonify(updated_rows)
             application.config['LOT_INFO'] = updated_lot
-            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.headers['Access-Control-Allow-Origin'] = '*'
             response.status_code = 200
             return response
         time.sleep(5)

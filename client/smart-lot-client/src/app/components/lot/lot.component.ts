@@ -128,6 +128,18 @@ export class LotComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getLotInfo()
 	this.getLotAvailibility();
+  }
+
+  ngDoCheck() {
+    if (this.cookie.get('colorblindModeCookie') === 'true') {
+      this.colorblindMode = true
+    }
+    else{
+      this.colorblindMode = false
+    }
+  }
+
+  ngAfterContentInit() {
 	const request$ = ajax({
         url: 'https://api.smart-lot.io/smart-lot/lots/polling/' + this.current_UUID,
         //url: 'http://127.0.0.1:5000/smart-lot/lots/polling/' + this.current_UUID,
@@ -142,15 +154,6 @@ export class LotComponent implements OnInit, OnDestroy {
     }, (error) => {
       console.error(error);
     });
-  }
-
-  ngDoCheck() {
-    if (this.cookie.get('colorblindModeCookie') === 'true') {
-      this.colorblindMode = true
-    }
-    else{
-      this.colorblindMode = false
-    }
   }
   
   ngOnDestroy() {
